@@ -1,0 +1,1 @@
+angular.constant('config', '<?=$config;?>');

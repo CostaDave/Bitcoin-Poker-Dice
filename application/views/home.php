@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="bitcoinDice" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="bitcoinDice" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="bitcoinDice" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="bitcoinDice" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="../../favicon.ico">
+
+  <title>Bitcoin Dice</title>
+
+  <!-- build:css css/app-name.min.css -->
+  <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" href="/bower_components/CSS-Playing-Cards/cards.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="/bower_components/Plugins/integration/bootstrap/3/dataTables.bootstrap.css" media="screen" />
+    <!--[if lt IE 9]>
+        <link rel="stylesheet" type="text/css" href="/bower_components/CSS-Playing-Cards/cards-ie.css" media="screen" />
+    <![endif]-->
+    <!--[if IE 9]>
+        <link rel="stylesheet" type="text/css" href="/bower_components/CSS-Playing-Cards/cards-ie9.css" media="screen" />
+    <![endif]-->
+
+  <!-- Custom styles for this template -->
+  <link href="/assets/css/style.css" rel="stylesheet">
+  <!-- endbuild -->
+  <script src="/bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="/assets/js/ie10-workaround.js"></script>
+
+  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+    </head>
+
+    <body>
+
+      <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="navController">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a href="#/" class="navbar-brand visible-sm visible-xs">Bitcoin Poker Dice</a>
+          </div>
+          <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#/">Play</a></li>
+              <li class=""><a href="#/payouts">Payouts</a></li>
+              <li class=""><a href="#/deposit">Deposit</a></li>              
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a ng-click="toggleMute()"><span ng-class="{'fa fa-volume-up': !sound_muted, 'fa fa-volume-off': sound_muted}"></span></a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="ng-view" autoscroll="true"></div>
+      </div><!-- /.container -->
+
+</script>
+      <!-- build:js assets/build/js/app.min.js -->
+      <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+      <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+      <script src="/bower_components/angular/angular.min.js"></script>
+      <script src="/bower_components/angular-route/angular-route.js"></script>
+      <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+      <script src="/bower_components/lodash/dist/lodash.min.js"></script>
+      <script src="/bower_components/restangular/dist/restangular.min.js"></script>
+      <script src="/bower_components/jquery.qrcode/dist/jquery.qrcode.min.js"></script>
+      <script src="/bower_components/soundmanager2/script/soundmanager2-nodebug-jsmin.js"></script>
+      <script src="/bower_components/datatables/media/js/jquery.dataTables.js"></script>
+      <script src="/bower_components/angular-datatables/dist/angular-datatables.min.js"></script>
+      
+      <script src="/assets/js/easing.js"></script>
+      <script src="/assets/js/libs/jquery.jrumble.1.3.min.js"></script>
+      <script src="/assets/js/app/app.js"></script>
+      <script src="/assets/js/app/controllers.js"></script>
+      <script src="/assets/js/app/directives.js"></script>
+      <script src="/assets/js/app/filters.js"></script>
+      <script src="/assets/js/app/services.js"></script>
+      <script src="<?=site_url('js');?>/index"></script>
+      <!-- endbuild -->
+ <script type="text/ng-template" id="dieTemplate">
+        <div class="card rank-{{diceValue}} hearts winner-cards">
+          <span class="rank">{{diceValue}}</span>
+          <span class="suit"><i class="fa fa-btc"></i></span>
+        </div>
+      </script>
+      <script type="text/ng-template" id="diceTemplate">
+  <div class="playingCards fourColours faceImages rotateHand text-center">
+    <div class="row">
+      <div class="col-md-2 col-sm-2 col-xs-2 col-xs-offset-1 col-sm-offset-1 col-md-offset-1">
+        <a id="dice_1" class="card rank-q hearts" ng-click="toggleHold(1)">
+          <span class="rank">Q</span>
+          <span class="suit"><i class="fa fa-btc"></i></span>
+        </a>
+      </div>
+      <div class="col-md-2 col-xs-2">
+        <a id="dice_2" class="card rank-q hearts" ng-click="toggleHold(2)">
+          <span class="rank">Q</span>
+          <span class="suit"><i class="fa fa-btc"></i></span>
+        </a>
+      </div>
+      <div class="col-md-2 col-xs-2">
+        <a id="dice_3" class="card rank-q hearts" ng-click="toggleHold(3)">
+          <span class="rank">Q</span>
+          <span class="suit"><i class="fa fa-btc"></i></span>
+        </a>
+      </div>
+      <div class="col-md-2 col-xs-2">
+        <a id="dice_4" class="card rank-q hearts" ng-click="toggleHold(4)">
+          <span class="rank">Q</span>
+          <span class="suit"><i class="fa fa-btc"></i></span>
+        </a>
+      </div>
+      <div class="col-md-2 col-xs-2">
+        <a id="dice_5" class="card rank-q hearts" ng-click="toggleHold(5)">
+          <span class="rank">Q</span>
+          <span class="suit">&hearts;</span>
+        </a>
+      </div>
+
+
+    </div>
+  </div>
+
+</script>
+<script type="text/ng-template" id="seedModalTemplate">
+  <div class="modal-header">
+    <h3 class="modal-title">Set Client Seeds</h3>
+  </div>
+  <div class="modal-body">
+    <h5>Dice 1</h5>
+    <input ng-model="seeds.seed_1" />
+    <h5>Dice 2</h5>
+    <input ng-model="seeds.seed_2" />
+    <h5>Dice 3</h5>
+    <input ng-model="seeds.seed_3" />
+    <h5>Dice 4</h5>
+    <input ng-model="seeds.seed_4" />
+    <h5>Dice 5</h5>
+    <input ng-model="seeds.seed_5" />
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+  </div>
+</script>
+<script type="text/ng-template" id="qrModalTemplate">
+  <div class="modal-header">
+    <h3 class="modal-title">Make a Deposit</h3>
+  </div>
+  <div class="modal-body text-center">
+    <address-qr-code data-address="user.address"></address-qr-code>
+    <h3>{{user.address}}</h3>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+  </div>
+
+
+
+
+    </body>
+    </html>

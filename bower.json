@@ -1,0 +1,38 @@
+{
+  "name": "bitzee",
+  "version": "0.0.0",
+  "homepage": "https://github.com/CostaDave/bitzee",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.2.0",
+    "angular": "~1.2.21",
+    "angular-route": "~1.2.21",
+    "angular-bootstrap": "~0.11.0",
+    "jquery": "~2.1.1",
+    "html5-boilerplate": "~4.3.0",
+    "jQuery-jSlots": "https://github.com/matthewlein/jQuery-jSlots.git#~1.0.3",
+    "font-awesome": "~4.1.0",
+    "jquery.qrcode": "~0.8.0",
+    "soundmanager2": "*",
+    "scalable-css-playing-cards": "https://github.com/donpark/scalable-css-playing-cards.git",
+    "CSS-Playing-Cards": "https://github.com/selfthinker/CSS-Playing-Cards.git",
+    "blockui": "https://github.com/malsup/blockui/",
+    "blockUI": "https://github.com/malsup/blockui.git",
+    "angular-datatables": "~0.0.2",
+    "Plugins": "https://github.com/DataTables/Plugins.git",
+    "restangular": "~1.4.0",
+    "lodash": "~2.4.1",
+    "prettyprint.js": "https://github.com/padolsey/prettyprint.js.git"
+  }
+}
