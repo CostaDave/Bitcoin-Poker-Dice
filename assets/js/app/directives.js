@@ -19,12 +19,11 @@ directive('appVersion', ['version', function(version) {
 		// 	address: '@address'
 		// },
 		link: function link(scope, element, attrs) {
-      console.log(scope);
       element.qrcode({
         render:'canvas',
         color: '#FFFFFFF',
         text: 'bitcoin:'+scope.user.address,
-        size: 300
+        size: 200
       });
     }
   }
@@ -33,7 +32,8 @@ directive('appVersion', ['version', function(version) {
     restrict: 'E',
     templateUrl: 'dieTemplate',
     scope: {
-      dice: '='
+      dice: '=',
+      size: '='
     },
     
     link: function(scope, element, attributes) {
@@ -54,11 +54,11 @@ directive('appVersion', ['version', function(version) {
 
       	scope.$watch('dice',
           function (newVal) {
-            //console.log('chaning');
-            var all_dice = element.find('.card');
+            var all_dice = element.find('.dice');
             var rolling_dice = [];
             angular.forEach(all_dice, function(v,k){
-              if ($(v).parent('strong').length < 1) {
+              var id = $(v).attr('id');
+              if (!$('#'+id).hasClass('selected')) {
                 rolling_dice.push(v.id);
               }
             })
@@ -69,8 +69,7 @@ directive('appVersion', ['version', function(version) {
             var shuffle = $interval(function() {
               angular.forEach(rolling_dice, function(v,k){
                 var rand = dice_array[Math.floor(Math.random()*dice_array.length)];
-                $('#'+v).removeClass($('#'+v).attr('class')).addClass('card rank-'+rand.toLowerCase()+' hearts');
-                $('#'+v).children('.rank').html(rand);
+                $('#'+v).removeClass($('#'+v).attr('class')).addClass('dice dice-'+rand.toLowerCase());
               })
             }, 100);
 
@@ -79,9 +78,8 @@ directive('appVersion', ['version', function(version) {
               all_dice.jrumble().trigger('stopRumble');
               $interval.cancel(shuffle);
               angular.forEach(scope.dice, function(v,k){
-                //console.log(v,k)
-                $('#'+k).removeClass($('#'+k).attr('class')).addClass('card rank-'+v.toLowerCase()+' hearts');
-                $('#'+k).children('.rank').html(v);
+                var oldClass = $('#'+k).attr('class').replace('selected','');
+                $('#'+k).removeClass(oldClass).addClass('dice dice-'+v.toLowerCase());
               })
             }, 500);
           }
@@ -116,14 +114,14 @@ return {
     };
     
    
-    scope.selectedCls = function(column) {
-        if(column == scope.sort.sortingOrder){
-            return ('icon-chevron-' + ((scope.sort.reverse) ? 'down' : 'up'));
-        }
-        else{            
-            return'icon-sort' 
-        } 
-    };      
+    // scope.selectedCls = function(column) {
+    //     if(column == scope.sort.sortingOrder){
+    //         return ('icon-chevron-' + ((scope.sort.reverse) ? 'down' : 'up'));
+    //     }
+    //     else{            
+    //         return'icon-sort' 
+    //     } 
+    // };      
   }// end link
 }
 });;

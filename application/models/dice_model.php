@@ -101,13 +101,6 @@ class dice_model extends CI_model
 
 		$this->load->library('guid');
 
-		// $dice = array(
-		// 	1 => array(1,2,3,4,5,6),
-		// 	2 => array(1,2,3,4,5,6),
-		// 	3 => array(1,2,3,4,5,6),
-		// 	4 => array(1,2,3,4,5,6),
-		// 	5 => array(1,2,3,4,5,6)
-		// );
 
 		$dice = array(
 			'roll_1' => array(
@@ -131,13 +124,7 @@ class dice_model extends CI_model
 				4 => array('9','10','J','Q','K','A'),
 				5 => array('9','10','J','Q','K','A')
 			),
-			'house_high' => array(
-				1 => array('9','10','J','Q','K','A'),
-				2 => array('9','10','J','Q','K','A'),
-				3 => array('9','10','J','Q','K','A'),
-				4 => array('9','10','J','Q','K','A'),
-				5 => array('9','10','J','Q','K','A')
-			)		
+		
 		);
 
 		$server_seeds = array(
@@ -162,21 +149,9 @@ class dice_model extends CI_model
 				4 => md5($this->guid->create_guid().$user_id.time()),
 				5 => md5($this->guid->create_guid().$user_id.time())
 			),
-			'house_high' => array(
-				1 => md5($this->guid->create_guid().$user_id.time()),
-				2 => md5($this->guid->create_guid().$user_id.time()),
-				3 => md5($this->guid->create_guid().$user_id.time()),
-				4 => md5($this->guid->create_guid().$user_id.time()),
-				5 => md5($this->guid->create_guid().$user_id.time())
-			)
+			
 				
 		);
-		
-		// $server_seed[1] = md5($this->guid->create_guid().$user_id.time());
-		// $server_seed[2] = md5($this->guid->create_guid().$user_id.time());
-		// $server_seed[3] = md5($this->guid->create_guid().$user_id.time());
-		// $server_seed[4] = md5($this->guid->create_guid().$user_id.time());
-		// $server_seed[5] = md5($this->guid->create_guid().$user_id.time());
 		
 		foreach($dice as $k => $v) {
 			//print_r($v);
@@ -208,8 +183,4 @@ class dice_model extends CI_model
 		return array('hash' => $hash, 'id' => $this->db->insert_id());
 	}
 
-	function get_user($guid) {
-		$this->load->database();
-		return $this->db->get_where('users', array('guid'=> $guid))->row();
-	}
 }

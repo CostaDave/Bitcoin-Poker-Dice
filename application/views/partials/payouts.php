@@ -1,13 +1,13 @@
 <div class="container">
 <div class="row">
-<h1>Payouts</h1>
+<h1 class="title_text">Payouts</h1>
 <table class="table white-box odds-table">
 	<thead>
 		<tr>
 			<td>Type</td>
-			<td>1 Roll</td>
-			<td>2 Roll</td>
-			<td>3 Roll</td>
+			<td class="text-center">1 Roll</td>
+			<td class="text-center">2 Roll</td>
+			<td class="text-center">3 Roll</td>
 		</tr>
 	</thead>
 	<tbody>

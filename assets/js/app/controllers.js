@@ -3,9 +3,162 @@
 /* Controllers */
 
 angular.module('bitcoinDice.controllers', [])
-.controller('AppCtrl', ['$scope','$rootScope', 'appConfig', '$interval', '$modal', '$timeout', 'userData', 'user', 'game', 'diceService', function($scope, $rootScope, appConfig, $interval, $modal, $timeout, userData, user, game, diceService) {
- console.log(appConfig);
- console.log(game);
+.controller('adminController',['$scope', '$rootScope', 'adminData', function($scope, $rootScope, adminData){
+  $scope.adminData = adminData;
+}])
+.controller('adminDashboardController',['$scope', '$rootScope', 'games', 'users', 'adminData', 'ngTableParams', function($scope, $rootScope, games, users, adminData, ngTableParams){
+  
+  $scope.adminData = adminData;
+  var gameData = games;
+  var userData = users;
+
+  $scope.gameTableParams = new ngTableParams({
+        page: 1,            // show first page
+        count: 10           // count per page
+    }, {
+        total: gameData.length, // length of data
+        getData: function($defer, params) {
+            $defer.resolve(gameData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        }
+    });
+
+  $scope.userTableParams = new ngTableParams({
+        page: 1,            // show first page
+        count: 10           // count per page
+    }, {
+        total: userData.length, // length of data
+        getData: function($defer, params) {
+            $defer.resolve(userData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        }
+    });
+}])
+.controller('adminWithdrawController',['$scope', '$rootScope', 'withdrawals', 'ngTableParams', function($scope, $rootScope, withdrawals, ngTableParams){
+  var data = withdrawals.withdrawals;
+  $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        count: 10           // count per page
+    }, {
+        total: data.length, // length of data
+        getData: function($defer, params) {
+            $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        }
+    });
+
+    $scope.checkboxes = { 'checked': false, items: {} };
+
+    // watch for check all checkbox
+    $scope.$watch('checkboxes.checked', function(value) {
+      console.log('echking all')
+        angular.forEach(data, function(item) {
+            if (angular.isDefined(item.id)) {
+                $scope.checkboxes.items[item.id] = value;
+            }
+        });
+    });
+
+    // watch for data checkboxes
+    $scope.$watch('checkboxes.items', function(values) {
+        if (!data) {
+            return;
+        }
+        var checked = 0, unchecked = 0,
+            total = data.length;
+        angular.forEach($scope.users, function(item) {
+            checked   +=  ($scope.checkboxes.items[item.id]) || 0;
+            unchecked += (!$scope.checkboxes.items[item.id]) || 0;
+        });
+        if ((unchecked == 0) || (checked == 0)) {
+            $scope.checkboxes.checked = (checked == total);
+        }
+        // grayed checkbox
+        angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
+    }, true);
+}])
+.controller('adminGamesController',['$scope', '$rootScope','$filter', 'games', 'ngTableParams', function($scope, $rootScope, $filter, games, ngTableParams){
+  console.log('loading controlelr')
+  var data = games;
+  $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        count: 10,
+        
+        sorting: {
+            id: 'desc'     // initial sorting
+        }      // count per page
+    }, {
+        total: data.length, // length of data
+        getData: function($defer, params) {
+            // use build-in angular filter
+            var orderedData = params.sorting() ?
+                                $filter('orderBy')(data, params.orderBy()) :
+                                data;
+
+            var filteredData = params.filter() ?
+                    $filter('filter')(data, params.filter()) :
+                    data;
+
+            $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        }
+    });
+}])
+.controller('adminGameController',['$scope', '$rootScope', 'game', 'ngTableParams', function($scope, $rootScope, game, ngTableParams){
+  console.log('loading controlelr')
+  $scope.game = game;
+  // var data = withdrawals.withdrawals;
+  // $scope.tableParams = new ngTableParams({
+  //       page: 1,            // show first page
+  //       count: 10           // count per page
+  //   }, {
+  //       total: data.length, // length of data
+  //       getData: function($defer, params) {
+  //           $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+  //       }
+  //   });
+}])
+.controller('adminUsersController',['$scope', '$rootScope','$filter', 'users', 'ngTableParams', function($scope, $rootScope, $filter, users, ngTableParams){
+  console.log('loading controlelr')
+  var data = users;
+  $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        count: 10,
+        
+        filter: {
+            guid: ''       // initial filter
+        }, 
+        sorting: {
+            user_id: 'desc'     // initial sorting
+        }      // count per page
+    }, {
+        total: data.length, // length of data
+        getData: function($defer, params) {
+            // use build-in angular filter
+            var orderedData = params.sorting() ?
+                                $filter('orderBy')(data, params.orderBy()) :
+                                data;
+
+            var filteredData = params.filter() ?
+                    $filter('filter')(data, params.filter()) :
+                    data;
+
+            $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        }
+    });
+}])
+.controller('adminUserController',['$scope', '$rootScope', 'user', 'games', 'ngTableParams', function($scope, $rootScope, user, games, ngTableParams){
+  console.log('loading controlelr')
+  $scope.user = user;
+  var data = games;
+  $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        count: 10           // count per page
+    }, {
+        total: data.length, // length of data
+        getData: function($defer, params) {
+            $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        }
+    });
+}])
+.controller('ApplicationController', ['$scope','$rootScope','AuthService', 'appConfig', 'lang', '$interval', '$modal', '$timeout', 'user', 'game', 'diceService', 'AUTH_EVENTS', 'api', function($scope, $rootScope, AuthService, appConfig, lang, $interval, $modal, $timeout, user, game, diceService, AUTH_EVENTS, api) {
+ $rootScope.lang = lang;
  $rootScope.config = appConfig;
  $scope.user = user;
  $rootScope.user = $scope.user;
@@ -13,7 +166,7 @@ angular.module('bitcoinDice.controllers', [])
  $scope.user_balance = $rootScope.user_balance;
  //$rootScope.next_hash = user.next_hash;
 
- $scope.odds = appConfig.odds;
+ $scope.hands = appConfig.hands;
  $scope.predicate = '-sort';
 
  $scope.stake = 0;
@@ -25,29 +178,34 @@ angular.module('bitcoinDice.controllers', [])
  {'text':'50%','amt':.50}
  ];
 
- $scope.dice = {};
- $scope.dice.dice_1 = 'A';
- $scope.dice.dice_2 = 'A';
- $scope.dice.dice_3 = 'A';
- $scope.dice.dice_4 = 'A';
- $scope.dice.dice_5 = 'A';
+ $scope.$watch(AuthService.isAuthenticated(), function(newVal){
+    //console.log('authenticated', newVal)
+ })
 
- var pollTimer = $interval(getUser,15000)
+ var pollTimer = $interval(function(){
+  //if($scope.user.logged_in) {
+    getUser();
+  //}
+ },15000)
+
+ $scope.$on('$destroy', function () { $interval.cancel(); });
+
+ $rootScope.$on(AUTH_EVENTS.notAuthenticated, function(){
+  console.log('no longer authenticated')
+ });
 
  function getUser(){
-  userData.getUser().then(function(data){
-    if(data.data.available_balance > $scope.user.available_balance) {
+  api.getUser().then(function(data){
+    if(data.available_balance > $scope.user.available_balance) {
       depositSound.play();
     }
-    $scope.user = data.data;
-    $rootScope.user = data.data;
-    $scope.user.available_balance = data.data.available_balance;
+    $scope.user = data;
+    $rootScope.user = data;
+    $scope.user.available_balance = data.available_balance;
   })
 }
 
 $scope.game = game;
-
-
 
 $scope.dice = game.dice;
 $scope.screenState;
@@ -76,7 +234,6 @@ collect_button = $('.btn-collect');
 
 function initScreen(){
   if(game.rolls_remaining == 3) {
-        //console.log('new game')
         changeScreenState('new');
       } else {
         changeScreenState('inplay');
@@ -84,7 +241,6 @@ function initScreen(){
     }
 
     function changeScreenState(state) {
-      //console.log('new screen state', state)
       $scope.screenState = state;
     }
 
@@ -94,13 +250,12 @@ function initScreen(){
 
     $scope.toggleHold = function(dice){
       clickDiceSound.play();
-      
       if($.inArray(dice, $scope.held_dice) > -1) { 
         remove($scope.held_dice, dice);
-        $('#dice_'+dice).unwrap();
+        $('#dice_'+dice).removeClass('selected');
       } else {
         $scope.held_dice.push(dice);
-        $('#dice_'+dice).wrap('<strong></strong>');
+        $('#dice_'+dice).addClass('selected');
       }
     }
 
@@ -121,16 +276,19 @@ function initScreen(){
       $scope.held_dice = [];
       $scope.stake = 0;
       $scope.rolls_remaining = 3;
-      $rootScope.reloadGameTable = Math.random();;
+      $rootScope.reloadGameTable = Math.random();
+      $rootScope.reloadTranTable = Math.random();;
       unhold_dice();
 
       if($scope.user.available_balance > 0) {
         $('.wager-buttons').removeClass('disabled');
       }
 
+      $('.selected').removeClass('selected');
+
       $scope.stake_held = false;
 
-      roll_button.html('New Game');
+      //roll_button.html('New Game');
 
       createSeeds();
 
@@ -155,19 +313,15 @@ function initScreen(){
         console.log(response);
         $scope.user.available_balance = response.balance;
         $scope.finished_hand = response.roll;
-        $scope.winning_hand = $rootScope.config.odds[response.winnings].name;
+        $scope.winning_hand = $rootScope.config.hands[response.winnings].name;
         $scope.winning_rolls_needed = response.rolls_needed;
         $scope.last_roll = response.roll;
-        console.log($rootScope.config.odds[response.winnings].payout[response.rolls_needed]);
-        $scope.winning_payout = $rootScope.config.odds[response.winnings].payout['roll_'+response.rolls_needed];
-        diceService.get_game().then(function(data){
+        $scope.winning_payout = $rootScope.config.hands[response.winnings].payout['roll_'+response.rolls_needed];
+        api.getGame().then(function(data){
           $scope.game = data;
           changeScreenState('result-winner');
           setupNewGame();
         });
-        
-        
-        //$scope.seeds.house_high = get_random_seed();
       });
 
 
@@ -175,7 +329,6 @@ function initScreen(){
 
 
     $scope.roll_dice = function(){
-      console.log($scope.game);  
       $scope.dice_rolling = true;
       rollDiceSound.play();
       
@@ -193,26 +346,30 @@ function initScreen(){
 
       var params = {seeds:$scope.seeds,held_dice:$scope.held_dice,stake:$scope.stake};
 
-      diceService.roll_dice(params).then(function(roll){
+      // console.log(api.rollDice().post($.params(params)).then(function(roll){
+      //   return roll;
+      // }))
+      api.rollDice(params).then(function(roll){
         $scope.dice = roll.roll;
-        $scope.rolls_remaining = roll.rolls_remaining;
+        $scope.rolls_remaining = $scope.rolls_remaining - 1;
         
         if(roll.rolls_remaining === 0) {
           var timeout = $timeout(function() {
-            diceService.get_game().then(function(data){
+            api.getGame().then(function(data){
               $scope.game = data;
+              $scope.user.available_balance = roll.balance;
               
-              if(roll.winning_rolls && $rootScope.config.odds[roll.winning_rolls].payout.roll_3 > 0) {
+              if(roll.winning_rolls && $rootScope.config.hands[roll.winning_rolls].payout.roll_3 > 0) {
                 winnerSound.play();
                 changeScreenState('result-winner');
-                $scope.winning_hand = $rootScope.config.odds[roll.winning_rolls].name;
+                $scope.winning_hand = $rootScope.config.hands[roll.winning_rolls].name;
                 $scope.winning_rolls_needed = 3;
-                console.log($rootScope.config.odds[roll.winning_rolls]);
-                $scope.winning_payout = $rootScope.config.odds[roll.winning_rolls].payout.roll_3;
+                $scope.winning_payout = $rootScope.config.hands[roll.winning_rolls].payout.roll_3;
+                console.log(roll.balance)
                 $scope.user.available_balance = roll.balance;
               } else {
                 loserSound.play();
-                console.log('roll', roll.roll)
+                
 
                 changeScreenState('result-loser');
               }
@@ -252,21 +409,14 @@ var depositSound = soundManager.createSound({
 });
 
 var winnerSound = soundManager.createSound({
-  url: '/assets/mp3/winner.mp3',
+  url: '/assets/mp3/winner_short.mp3',
   volume: 100
 });
 
 var loserSound = soundManager.createSound({
-  url: '/assets/mp3/loser.mp3',
+  url: '/assets/mp3/loser_short.mp3',
   volume: 100
 });
-    // $scope.$watch(function (){return $rootScope.held_dice;},
-    // function (newVal) {
-    //    $scope.game = $rootScope.game;
-    //    $scope.rolls_remaining = $rootScope.rolls_remaining;
-
-    // });
-
 
 $scope.addPercentToWager = function(amt) {
 
@@ -310,7 +460,6 @@ $scope.addAmtToWager = function(amt) {
 }
 
 $scope.openSeedModal = function () {
-  console.log('opening seed modal')
 
   var modalInstance = $modal.open({
     templateUrl: 'seedModalTemplate',
@@ -328,7 +477,6 @@ $scope.openModal = function (template) {
   var modalInstance = $modal.open({
     templateUrl: template,
     controller: 'ModalInstanceCtrl',
-      //size: size,
       resolve: {
         user: function () {
           return $scope.user;
@@ -345,7 +493,6 @@ $scope.openModal = function (template) {
   modalInstance.result.then(function (selectedItem) {
     $scope.selected = selectedItem;
   }, function () {
-      //$log.info('Modal dismissed at: ' + new Date());
     });
 
   $scope.ok = function () {
@@ -359,8 +506,37 @@ $scope.openModal = function (template) {
 
 
 }])
-.controller('navController',['$scope', function($scope){
+.controller('navController',['$scope', 'lang', function($scope, lang){
+  $scope.lang = lang;
   $scope.sound_muted = false;
+  $scope.active_nav = '';
+
+  $scope.$on('$routeChangeSuccess', function (ev, current, prev) {
+   var curr_route = current.$$route.originalPath;
+   if(curr_route == '/') {
+    $scope.active_nav = 'play';
+   }
+   if(curr_route == '/payouts') {
+    $scope.active_nav = 'payouts';
+   }  
+   if(curr_route == '/deposit') {
+    $scope.active_nav = 'deposit';
+   }
+   if(curr_route == '/withdraw') {
+    $scope.active_nav = 'withdraw';
+   }
+   if(curr_route == '/affiliates') {
+    $scope.active_nav = 'affiliates';
+   }
+   if(curr_route == '/account') {
+    $scope.active_nav = 'account';
+   }
+  });
+
+  $scope.changeNav = function(nav) {
+    $scope.active_nav = nav;
+  }
+
   $scope.toggleMute = function(dice){
     if(!$scope.sound_muted) {
       $scope.sound_muted = true;
@@ -371,105 +547,64 @@ $scope.openModal = function (template) {
     }
   }
 }])
-.controller('payoutController',['$scope', '$rootScope', 'config', function($scope, $rootScope, config){
-  $scope.odds =config.odds;
+.controller('payoutController',['$scope', '$rootScope', 'appConfig', function($scope, $rootScope, appConfig){
+  $scope.hands =appConfig.hands;
 }])
-.controller('depositController',['$scope', '$rootScope', 'user', function($scope, $rootScope, user){
+
+.controller('affiliateController',['$scope', '$rootScope', 'user', 'appConfig', function($scope, $rootScope, user, appConfig){
   $scope.user = user;
+  $scope.config =appConfig;
 }])
-.controller('tabController', ['$scope', 'DTOptionsBuilder', 'DTColumnBuilder', function($scope, DTOptionsBuilder, DTColumnBuilder){
-  $scope.tabs = [
-  { title:'Dynamic Title 1', content:'Dynamic content 1' },
-  { title:'Dynamic Title 2', content:'Dynamic content 2', disabled: true }
-  ];
-
-  $scope.mygames_dtOptions = DTOptionsBuilder
-        //.newOptions()
-        .fromSource('api/getGames')
-        .withOption('order', [1, 'desc'])
-        .withBootstrap()
-        .withPaginationType('full_numbers');
-        $scope.allgames_dtOptions = DTOptionsBuilder
-        //.newOptions()
-        .fromSource('api/getGames/all')
-        .withOption('order', [1, 'desc'])
-        .withBootstrap()
-        .withPaginationType('full_numbers');      
-        var dtColumns = [
-        DTColumnBuilder.newColumn('id').withTitle('ID'),
-        DTColumnBuilder.newColumn('updated_on').withTitle('Date'),
-        DTColumnBuilder.newColumn('result').withTitle('Result'),
-        DTColumnBuilder.newColumn('stake').withTitle('Stake'),
-        DTColumnBuilder.newColumn('winning_hand').withTitle('Winning Hand'),
-        DTColumnBuilder.newColumn('rolls').withTitle('Rolls'),
-        DTColumnBuilder.newColumn('profit').withTitle('Profit'),
-        DTColumnBuilder.newColumn('proof').withTitle('Proof')
-        ];
-
-
-  //$scope.mygames_dtOptions = dtOptions;
-
-  $scope.mygames_dtColumns = dtColumns;
-  $scope.allgames_dtColumns = dtColumns;
-
-  
+.controller('accountController',['$scope', '$rootScope', 'appConfig', function($scope, $rootScope, appConfig){
+  $scope.hands =appConfig.hands;
 }])
-.controller('proofController', ['$scope', function($scope){
-  $scope.tabs = [
-  ];
+.controller('depositController',['$scope', '$rootScope','lang', 'user', 'appConfig', function($scope, $rootScope, lang, user, appConfig){
+  $scope.lang = lang;
+  $scope.user = user;
+  $scope.demo_mode = appConfig.demo_mode;
 
-  
+  $scope.withdraw_address = '';
+  $scope.withdraw_amount = 0;
 
-  
-}])
-.controller('ctrlRead',['$scope', '$rootScope', '$filter', 'diceService', 'api', 'games', function ($scope, $rootScope, $filter, diceService, api, games) {
+  $scope.items = false;
 
-    // init
-    console.log(games);
-    $scope.items = null;
+  $scope.sort = {       
+    sortingOrder : 'id',
+    reverse : true
+  };
 
-    $scope.sort = {       
-      sortingOrder : 'id',
-      reverse : true
-    };
-    
+  $scope.gap = 5;
 
+  $scope.groupedItems = [];
+  $scope.itemsPerPage = 50;
+  $scope.pagedItems = [];
+  $scope.currentPage = 0;
 
-    
+  $scope.search = function () {
+    $scope.filteredItems = $filter('filter')($scope.items, function (item) {
+      for(var attr in item) {
 
-    $scope.gap = 5;
-    
-    $scope.groupedItems = [];
-    $scope.itemsPerPage = 50;
-    $scope.pagedItems = [];
-    $scope.currentPage = 0;
-
-    $scope.search = function () {
-      $scope.filteredItems = $filter('filter')($scope.items, function (item) {
-        for(var attr in item) {
-              //console.log(attr)
               if (searchMatch(item[attr], $scope.query))
                 return true;
             }
             return false;
           });
 
-        //console.log('here',$scope.filteredItems)
-        // take care of the sorting order
+
         if ($scope.sort.sortingOrder !== '') {
           $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sort.sortingOrder, $scope.sort.reverse);
         }
         $scope.currentPage = 0;
-        // now group by pages
+
         $scope.groupToPages();
       };
 
-    var searchMatch = function (haystack, needle) {
-      if (!needle) {
-        return true;
-      }
-      return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
-    };
+      var searchMatch = function (haystack, needle) {
+        if (!needle) {
+          return true;
+        }
+        return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+      };
 
     // init the filtered items
     
@@ -497,13 +632,156 @@ $scope.openModal = function (template) {
       for (var i = start; i < end; i++) {
         ret.push(i);
       }                
-        return ret;
+      return ret;
     }
 
     $scope.prevPage = function () {
       if ($scope.currentPage > 0) {
         $scope.currentPage--;
+      }
+    };
+
+    $scope.nextPage = function () {
+      if ($scope.currentPage < $scope.pagedItems.length - 1) {
+        $scope.currentPage++;
+      }
+    };
+
+    $scope.setPage = function () {
+      $scope.currentPage = this.n;
+    };
+
+    //functions have been describe process the data for display
+    $rootScope.$watch('reloadWithdrawals',function(newVal){
+      if(typeof newVal != 'undefined') {
+        $scope.reload_withdrawals();
+      }
+    })
+
+ 
+  $scope.requestWithdrawal = function(){
+    api.requestWithdrawal({'address':$scope.withdraw_address, 'amount':$scope.withdraw_amount});
+  }
+}])
+.controller('withdrawController',['$scope', '$rootScope','$filter', 'api', 'withdrawals', 'appConfig', 'ngTableParams', function($scope, $rootScope, $filter, api, withdrawals, appConfig, ngTableParams){
+  
+  $scope.demo_mode = appConfig.demo_mode;
+
+  var data = withdrawals;
+  $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        count: 10           // count per page
+    }, {
+        total: data.length, // length of data
+        getData: function($defer, params) {
+            $defer.resolve(data.slice((params.page() - 1) * params.count(), params.page() * params.count()));
         }
+    });
+
+    $scope.checkboxes = { 'checked': false, items: {} };
+
+  $scope.requestWithdrawal = function(){
+    console.log('requesting withdrawal');
+    api.requestWithdrawal({'address':$scope.withdraw_address, 'amount':$scope.withdraw_amount});
+  }
+  
+}])
+.controller('tabController', ['$scope', 'DTOptionsBuilder', 'DTColumnBuilder', function($scope, DTOptionsBuilder, DTColumnBuilder){
+  $scope.tabs = [
+  { title:'Dynamic Title 1', content:'Dynamic content 1' },
+  { title:'Dynamic Title 2', content:'Dynamic content 2', disabled: true }
+  ];
+
+  
+  
+}])
+.controller('proofController', ['$scope', function($scope){
+  $scope.tabs = [
+  ];
+
+  
+
+  
+}])
+.controller('ctrlRead',['$scope', '$rootScope', '$filter', 'diceService', 'api', 'games', function ($scope, $rootScope, $filter, diceService, api, games) {
+
+    // init
+    $scope.items = null;
+
+    $scope.sort = {       
+      sortingOrder : 'id',
+      reverse : true
+    };
+    
+
+
+    
+
+    $scope.gap = 50;
+    
+    $scope.groupedItems = [];
+    $scope.itemsPerPage = 50;
+    $scope.pagedItems = [];
+    $scope.currentPage = 0;
+
+    $scope.search = function () {
+      $scope.filteredItems = $filter('filter')($scope.items, function (item) {
+        for(var attr in item) {
+
+              if (searchMatch(item[attr], $scope.query))
+                return true;
+            }
+            return false;
+          });
+
+        if ($scope.sort.sortingOrder !== '') {
+          $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sort.sortingOrder, $scope.sort.reverse);
+        }
+        $scope.currentPage = 0;
+        // now group by pages
+        $scope.groupToPages();
+      };
+
+      var searchMatch = function (haystack, needle) {
+        if (!needle) {
+          return true;
+        }
+        return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+      };
+
+    // init the filtered items
+    
+
+
+    // calculate page in place
+    $scope.groupToPages = function () {
+      $scope.pagedItems = [];
+
+      for (var i = 0; i < $scope.filteredItems.length; i++) {
+        if (i % $scope.itemsPerPage === 0) {
+          $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [ $scope.filteredItems[i] ];
+        } else {
+          $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+        }
+      }
+    };
+    
+    $scope.range = function (size,start, end) {
+      var ret = [];        
+      if (size < end) {
+        end = size;
+        start = size-$scope.gap;
+      }
+      for (var i = start; i < end; i++) {
+        ret.push(i);
+      }                
+      return ret;
+    }
+
+    $scope.prevPage = function () {
+      if ($scope.currentPage > 0) {
+        $scope.currentPage--;
+      }
     };
 
     $scope.nextPage = function () {
@@ -522,7 +800,6 @@ $scope.openModal = function (template) {
       } else {
         api.getGames().then(function(data){
           $scope.items = games;
-          console.log(data);
           $scope.search();
         });
       }
@@ -531,7 +808,6 @@ $scope.openModal = function (template) {
     //functions have been describe process the data for display
     $rootScope.$watch('reloadGameTable',function(newVal){
       if(typeof newVal != 'undefined') {
-        console.log('reloading table', newVal)
         $scope.reload_games();
         //$rootScope.reloadGameTable = false;
       }
@@ -539,28 +815,229 @@ $scope.openModal = function (template) {
       //$scope.search();
     })
 
-$scope.reload_games = function(){
-  if($scope.items == null) {
-   $scope.items = games;
+    $scope.reload_games = function(){
+      if($scope.items == null) {
+       $scope.items = games;
 
- } else {
-  api.getGames().then(function(data){
+     } else {
+      api.getGames().then(function(data){
 
-    $scope.items = data;
-    $scope.search();
-  });
-}
-$scope.search();  
+        $scope.items = data;
+        $scope.search();
+      });
+    }
+    $scope.search();  
 
-};         
+  };         
 
-$scope.reload_games();
+  $scope.reload_games();
+
+
+}])
+.controller('allGamesController',['$scope', '$rootScope', '$interval', '$filter', 'api', function ($scope, $rootScope, $interval, $filter, api) {
+
+  $scope.items = null;
+
+  $scope.reload_games = function(){
+    api.getAllGames().then(function(data){
+      $scope.items = data;
+    });
+  };         
+
+  $scope.reload_games();
+
+  var pollTimer = $interval($scope.reload_games(),60000)
 
 
 }])
 
 
-.controller('ModalInstanceCtrl', ['$scope','$rootScope','$modalInstance', 'user', function($scope,$rootScope,$modalInstance,user) {
+.controller('tranTableController',['$scope', '$rootScope', '$filter', 'api', 'transactions', function ($scope, $rootScope, $filter, api, transactions) {
+
+    $scope.items = transactions;
+
+    $scope.sort = {       
+      sortingOrder : 'id',
+      reverse : true
+    };
+    
+
+
+    
+
+    $scope.gap = 50;
+    
+    $scope.groupedItems = [];
+    $scope.itemsPerPage = 50;
+    $scope.pagedItems = [];
+    $scope.currentPage = 0;
+
+    $scope.search = function () {
+      $scope.filteredItems = $filter('filter')($scope.items, function (item) {
+        for(var attr in item) {
+
+              if (searchMatch(item[attr], $scope.query))
+                return true;
+            }
+            return false;
+          });
+
+        if ($scope.sort.sortingOrder !== '') {
+          $scope.filteredItems = $filter('orderBy')($scope.filteredItems, $scope.sort.sortingOrder, $scope.sort.reverse);
+        }
+        $scope.currentPage = 0;
+        // now group by pages
+        $scope.groupToPages();
+      };
+
+      var searchMatch = function (haystack, needle) {
+        if (!needle) {
+          return true;
+        }
+        return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+      };
+
+    // init the filtered items
+    
+
+
+    // calculate page in place
+    $scope.groupToPages = function () {
+      $scope.pagedItems = [];
+
+      for (var i = 0; i < $scope.filteredItems.length; i++) {
+        if (i % $scope.itemsPerPage === 0) {
+          $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)] = [ $scope.filteredItems[i] ];
+        } else {
+          $scope.pagedItems[Math.floor(i / $scope.itemsPerPage)].push($scope.filteredItems[i]);
+        }
+      }
+    };
+    
+    $scope.range = function (size,start, end) {
+      var ret = [];        
+      if (size < end) {
+        end = size;
+        start = size-$scope.gap;
+      }
+      for (var i = start; i < end; i++) {
+        ret.push(i);
+      }                
+      return ret;
+    }
+
+    $scope.prevPage = function () {
+      if ($scope.currentPage > 0) {
+        $scope.currentPage--;
+      }
+    };
+
+    $scope.nextPage = function () {
+      if ($scope.currentPage < $scope.pagedItems.length - 1) {
+        $scope.currentPage++;
+      }
+    };
+
+    $scope.setPage = function () {
+      $scope.currentPage = this.n;
+    };
+
+    $scope.reload_trans = function(){
+      if($scope.items == null) {
+        $scope.items = transactions;
+      } else {
+        api.getGames().then(function(data){
+          $scope.items = data;
+          $scope.search();
+        });
+      }
+      $scope.search();  
+    }; 
+    //functions have been describe process the data for display
+    $rootScope.$watch('reloadTranTable',function(newVal){
+      if(typeof newVal != 'undefined') {
+        console.log('reloading table', newVal)
+        $scope.reload_trans();
+      }
+    })
+
+    $scope.reload_trans = function(){
+      if($scope.items == null) {
+       $scope.items = transactions;
+
+     } else {
+      api.getTransactions().then(function(data){
+
+        $scope.items = data;
+        $scope.search();
+      });
+    }
+    $scope.search();  
+
+  };         
+
+  $scope.reload_trans();
+
+
+}])
+.controller('loginController', ['$scope','$rootScope','$state', 'api', 'AuthService', 'AUTH_EVENTS', function($scope,$rootScope, $state, api, AuthService, AUTH_EVENTS) {
+
+
+  $scope.login_errors = null;
+  $scope.password = null;
+  $scope.one_time_pass = null;
+
+  $scope.login = function (credentials) {
+    AuthService.login(credentials).then(function (user) {
+      $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+      $scope.setCurrentUser(user);
+      $state.go('home');
+    }, function () {
+      $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+    });
+  };
+
+  $scope.setCurrentUser = function (user) {
+    $rootScope.user = user;
+  };
+
+  $scope.logout = function(){
+    AuthService.logout().then(function(data){
+      console.log(data);
+      //$location.path('/login');
+    });
+  }
+
+  var changeLocation = function(url, forceReload) {
+    $scope = $scope || angular.element(document).scope();
+    if(forceReload || $scope.$$phase) {
+      $window.location = url;
+    }
+    else {
+      $location.path(url);
+      $scope.$apply();
+    }
+  };
+}])
+.controller('accountSettingsController', ['$scope','$rootScope', 'api',  function($scope,$rootScope,api) {
+
+  $scope.user = $rootScope.user;
+  $scope.password_errors = null;
+
+  $scope.setPassword = function(params){
+    api.setPassword(params).then(function(data){
+      if(undefined != typeof data.error) {
+        $scope.password_errors = data.error;
+      } else {
+        $scope.has_password = true;
+        //$location.path('/login');
+        
+      }
+    });
+  }
+}])
+
+.controller('ModalInstanceCtrl', ['$scope','$rootScope','$modalInstance', 'user',  function($scope,$rootScope,$modalInstance,user) {
 
   $scope.user = user;;
       // $scope.selected = {

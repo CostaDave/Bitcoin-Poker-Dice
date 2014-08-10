@@ -10,6 +10,21 @@
 
 }
 
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('/dist/fonts/fontawesome-webfont.eot?v=4.1.0');
+  src: url('/dist/fonts/fontawesome-webfont.eot?#iefix&v=4.1.0') format('embedded-opentype'), url('/dist/fonts/fontawesome-webfont.woff?v=4.1.0') format('woff'), url('/dist/fonts/fontawesome-webfont.ttf?v=4.1.0') format('truetype'), url('/dist/fonts/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Glyphicons Halflings';
+
+  src: url('/dist/fonts/glyphicons-halflings-regular.eot');
+  src: url('/dist/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('/dist/fonts/glyphicons-halflings-regular.woff') format('woff'), url('/dist/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('/dist/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
 body {
   padding-top: 50px;
 }
@@ -64,18 +79,14 @@ body {
   color:black;
 }
 
-.winner-text {
-  font-family: 'lasvegas-jackpot', Arial, sans-serif;
-    font-size: 80px;
-    margin-top:10px;
-    margin-bottom:0px;
-    padding-bottom:0px;
+.green-text {
+  color:green;
 }
 
-.winner-instructions {
-  margin-top:0px;
-  padding-top:0px;
+.red-text {
+  color:red;
 }
+
 
 .container h1,h4,.h4,h6, p {
     color:white;
@@ -91,14 +102,8 @@ img .dice-img {
     margin-top:25px;
 }
 
-.dice-bg {
-    /*min-height:500px;*/
-    /*height:350px;*/
-    background-image: url('/assets/img/dice.png');
-    background-repeat:no-repeat;
-/*background-attachment:fixed;*/
-background-position:center 35px; 
-}
+
+
 .dice-container {
   height:143px;
 }
@@ -154,50 +159,6 @@ background-position:center 35px;
     color:black;
 }
 
-
-.dice {
-    background-image: url(/assets/img/dice/spritesheet.png);
-    background-repeat: no-repeat;
-    display: block;
-    min-height: 95px;
-}
-
-.dice_1 {
-    width: 95px;
-    height: 93px;
-    background-position: -5px -5px;
-}
-
-.dice_2 {
-    width: 95px;
-    height: 93px;
-    background-position: -5px -108px;
-}
-
-.dice_3 {
-    width: 95px;
-    height: 93px;
-    background-position: -5px -211px;
-}
-
-.dice_4 {
-    width: 95px;
-    height: 93px;
-    background-position: -5px -314px;
-}
-
-.dice_5 {
-    width: 95px;
-    height: 93px;
-    background-position: -5px -417px;
-}
-
-.dice_6 {
-    width: 95px;
-    height: 93px;
-    background-position: -5px -520px;
-}
-
 .navbar {
     background-image: url(/assets/img/nav_bg.png);
     color:white;
@@ -208,30 +169,37 @@ background-position:center 35px;
     background-color:rgba(0,0,0,0.3);
 }
 
-.playingCards .card {
-    width: 100%;
-    /*min-height: 87px;*/
-}
-
-.playingCards .row div {
-    padding-left:5px;
-    padding-right:5px;
-
-}
 
 .winner-dice {
   padding-left: 40px;
 }
 
-.playingCards .winner-cards {
-  height:35px;
+.winner-text {
+  font-family: 'lasvegas-jackpot', Arial, sans-serif;
+    font-size: 80px;
+    margin-bottom:0px;
+    padding-bottom:0px;
 }
- 
 
-.playingCards strong .card {
-    -moz-box-shadow:    inset 0 0 10px #FF0000;
-   -webkit-box-shadow: inset 0 0 10px #FF0000;
-   box-shadow:         inset 0 0 10px #FF0000;
+.loser-text {
+  font-family: 'lasvegas-jackpot', Arial, sans-serif;
+}
+
+.new-text {
+  font-family: 'lasvegas-jackpot', Arial, sans-serif;
+}
+
+.winner-text-sm {
+  font-size:40px;
+}
+
+.main-box {
+  height:150px;
+}
+
+.winner-instructions {
+  margin-top:0px;
+  padding-top:0px;
 }
 
 .deposit-address {
@@ -295,34 +263,6 @@ background-position:center 35px;
   -webkit-font-smoothing: antialiased;
 }
 
-/* hearts */
-.playingCards .card.rank-2.hearts .suit:after {
-    content: "\2022   \A\A\2022  ";
-}
-.playingCards .card.rank-3.hearts .suit:after {
-    content: "\2022   \A\2022   \A\2022  ";
-}
-.playingCards .card.rank-4.hearts .suit:after {
-    content: "\2022  \00A0\00A0\00A0\2022   \A\A\2022  \00A0\00A0\00A0\2022  ";
-}
-.playingCards .card.rank-5.hearts .suit:after {
-    content: "\2022  \00A0\00A0\00A0\2022   \A\2022   \A\2022  \00A0\00A0\00A0\2022  ";
-}
-.playingCards .card.rank-6.hearts .suit:after {
-    content: "\2022  \00A0\00A0\00A0\2022   \A\2022  \00A0\00A0\00A0\2022   \A\2022  \00A0\00A0\00A0\2022  ";
-}
-.playingCards .card.rank-7.hearts .suit:after {
-    content: "\2022  \00A0\00A0\2022   \A\2022  \00A0\2022  \00A0\2022   \A\2022  \00A0\00A0\2022  ";
-}
-.playingCards .card.rank-8.hearts .suit:after {
-    content: "\2022  \00A0\2022  \00A0\2022   \A\2022  \00A0\00A0\2022   \A\2022  \00A0\2022  \00A0\2022  ";
-}
-.playingCards .card.rank-9.hearts .suit:after {
-    content: "\2022  \00A0\2022  \00A0\2022   \A\2022  \00A0\2022  \00A0\2022   \A\2022  \00A0\2022  \00A0\2022  ";
-}
-.playingCards .card.rank-10.hearts .suit:after {
-    content: "\2022  \00A0\2022  \00A0\2022   \A\2022  \00A0\2022  \00A0\2022  \00A0\2022   \A\2022  \00A0\2022  \00A0\2022  ";
-}
 
 pre {
     -moz-tab-size:    4;
@@ -349,6 +289,346 @@ input {
   margin-top:0px;
 }
 
+.dice-container2 {
+  padding-left:100px;
+}
+
+.dice {
+    
+    background-repeat: no-repeat;
+    display: block;
+    cursor: pointer; 
+    float:left;
+}
+
+.dice-10 {
+    background-image: url(/assets/img/dice/10.png);
+}
+
+.dice-9 {
+    background-image: url(/assets/img/dice/9.png);
+}
+
+.dice-a {
+    background-image: url(/assets/img/dice/A.png);
+}
 
 
+.dice-j {
+    background-image: url(/assets/img/dice/J.png);
+}
 
+.dice-k {
+    background-image: url(/assets/img/dice/K.png);
+}
+
+.dice-q {
+    background-image: url(/assets/img/dice/Q.png);
+}
+
+.selected {
+    -moz-box-shadow:    inset 0 0 10px #FF0000;
+   -webkit-box-shadow: inset 0 0 10px #FF0000;
+   box-shadow:         inset 0 0 10px #FF0000;
+}
+
+
+@media all and (min-width: 1200px) {
+  .dice {
+    width: 80px;
+    height: 80px;
+    margin-top:10px;
+    margin-right:10px;
+    background-size: 80px 80px;
+  }
+
+  .dice-container2 {
+    padding-left:55px;
+  }
+
+  .result {
+    width: 50px;
+    height: 50px;
+    margin-top:40px;
+    margin-right:10px;
+    background-size: 50px 50px;
+  }
+
+  .playingCards.inText .after-card span.rank {
+    font-size: 6em;
+    margin-bottom:10px;
+  }
+
+  .loser-text {
+    font-size: 80px;
+    text-align: center;
+    margin-left: 30px;
+  }
+
+  .new-text {
+    font-size:80px;
+  }
+
+
+}
+
+
+@media all and (min-width: 992px) and (max-width: 1199px) {
+  .dice {
+    width: 70px;
+    height: 70px;
+    margin-top:10px;
+    margin-right:10px;
+    background-size: 70px 70px;
+  }
+
+  .dice-container2 {
+    padding-left:30px;
+  }
+
+  .result {
+    width: 35px;
+    height: 35px;
+    margin-top:40px;
+    margin-right:10px;
+    background-size: 35px 35px;
+  }
+
+  .loser-text {
+    font-size: 60px;
+    text-align: center;
+    margin-left: 30px;
+  }
+
+  .wager-text {
+    font-size:14px;
+  }
+
+  .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td {
+    padding:5px;
+  }
+
+  .new-text {
+    font-size:70px;
+    margin-bottom: 0px;
+  }
+
+}
+
+
+@media all and (min-width: 768px) and (max-width: 991px) {
+  .dice {
+    width: 100px;
+    height: 100px;
+    margin-top:0px;
+    margin-right:10px;
+    background-size: 100px 100px;
+  }
+
+  .dice-container2 {
+    padding-left:80px;
+  }
+
+  .result {
+    width: 60px;
+    height: 60px;
+    margin-top:30px;
+    margin-right:10px;
+    background-size: 60px 60px;
+  }
+
+  .loser-text {
+    font-size: 80px;
+    text-align: center;
+    margin-left: 30px;
+  }
+
+  .playingCards.inText .after-card span.rank {
+    font-size: 8em;
+    margin-bottom:10px;
+  }
+
+  .new-text {
+    font-size:80px;
+  }
+}
+
+@media all and (min-width:620px) and (max-width: 767px)  {
+  .dice {
+    width: 90px;
+    height: 90px;
+    margin-top:0px;
+    margin-right:10px;
+    background-size: 90px 90px;
+  }
+
+  .dice-container2 {
+    padding-left:80px;
+  }
+
+  .result {
+    width: 60px;
+    height: 60px;
+    margin-top:30px;
+    margin-right:10px;
+    background-size: 60px 60px;
+  }
+
+  .loser-text {
+    font-size: 80px;
+    text-align: center;
+    margin-left: 30px;
+  }
+
+  .new-text {
+    font-size:80px;
+  }
+}
+
+@media all and (min-width: 538px) and (max-width: 619px)   {
+  .dice {
+    width: 80px;
+    height: 80px;
+    margin-top:0px;
+    margin-right:10px;
+    background-size: 80px 80px;
+  }
+  .dice-container2 {
+    padding-left:50px;
+  }
+
+  .result {
+    width: 50px;
+    height: 50px;
+    margin-top:30px;
+    margin-right:10px;
+    background-size: 50px 50px;
+  }
+
+  .loser-text {
+    font-size: 70px;
+    text-align: center;
+    margin-left: 30px;
+  }
+
+  .new-text {
+    font-size:70px;
+  }
+
+  
+}
+
+
+@media all and (min-width: 443px) and (max-width: 537px)   {
+  .dice {
+    width: 65px;
+    height: 65px;
+    margin-top:0px;
+    margin-right:10px;
+    background-size: 65px 65px;
+  }
+  .dice-container2 {
+    padding-left:50px;
+  }
+
+  .result {
+    width: 40px;
+    height: 40px;
+    margin-top:40px;
+    margin-right:10px;
+    background-size: 40px 40px;
+  }
+
+  .loser-text {
+    font-size: 70px;
+    text-align: center;
+    margin-left: 30px;
+  }
+
+  .new-text {
+    font-size:70px;
+  }
+
+  
+}
+
+@media all and (min-width: 404px) and (max-width: 442px)   {
+
+  .dice {
+    width: 60px;
+    height: 60px;
+    margin-top:0px;
+    margin-right:10px;
+    background-size: 60px 60px;
+  }
+  .dice-container2 {
+    padding-left:15px;
+  }
+
+  .result {
+    width: 30px;
+    height: 30px;
+    margin-top:30px;
+    margin-right:10px;
+    background-size: 30px 30px;
+  }
+
+  .loser-text {
+    font-size: 50px;
+    text-align: center;
+    margin-left: 30px;
+  }
+
+  .new-text {
+    font-size:70px;
+    margin-bottom: 0px;
+  } 
+}
+.outline {
+  border:thin red solid;
+}
+
+@media all and  (max-width: 403px)   {
+
+  .dice {
+    width: 45px;
+    height: 45px;
+    margin-top:0px;
+    margin-right:10px;
+    background-size: 45px 45px;
+  }
+  .dice-container2 {
+    padding-left:20px;
+  }
+
+  .result {
+    width: 25px;
+    height: 25px;
+    margin-top:30px;
+    margin-right:5px;
+    background-size: 25px 25px;
+  }
+
+  .loser-text {
+    font-size: 40px;
+    text-align: center;
+    margin-left: 30px;
+  }
+
+  .new-text {
+    font-size:70px;
+    margin-bottom:0px;
+  } 
+
+  .btn {
+    padding-left:0px;
+    padding-right:0px;
+  }
+}
+.outline {
+  border:thin red solid;
+}
+
+.account-settings {
+  color:black !important;
+}

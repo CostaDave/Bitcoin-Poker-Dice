@@ -16,21 +16,20 @@ class transaction_model extends CI_model
 		);
 
 		$this->db->insert('transactions', $insert_data);
+
+		return $this->db->insert_id();
 	}
 
-	function get_user($guid) {
+	function update_transaction($transaction_id, $data) {
 		$this->load->database();
-		$user = $this->db->get_where('users', array('guid'=> $guid))->row();
-		
-		return $user;
+		$this->db->where('id', $transaction_id);
+		$data['updated_on'] = date('Y-m-d H:i:s');
+		$this->db->update('transactions', $data);
 	}
 
-	function debit_balance($guid, $amt) {
+	function get_transactions($user_id) {
 		$this->load->database();
-		$user = $this->get_user($guid);
-		$update_data['available_balance'] = $user->available_balance - $amt;
-		$this->db->where('guid', $guid);
-		$this->db->update('users', $update_data);
+		$this->db->where('user_id', $user_id);
+		return $this->db->get('transactions')->result();
 	}
-
 }

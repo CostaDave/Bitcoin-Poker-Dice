@@ -2,30 +2,55 @@
 
 class Api extends CI_Controller {
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -  
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in 
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see http://codeigniter.com/user_guide/general/urls.html
-	 */
+	function __construct()
+	{
+		parent::__construct();
+		$this->user_id = $this->session->userdata('user_id');
+		$this->load->library('ion_auth');
+		$this->load->library('form_validation');
+		$this->load->helper('url');
+
+		$this->load->model('user_model');
+		$user = $this->user_model->get_user($this->user_id);
+
+		if(!$user || ($user->has_password && !$this->ion_auth->logged_in())) {
+			header('HTTP/1.0 401 Unauthorized');
+			die('You must be logged in.');
+		} 
+	}
+
+
 	public function get_user()
 	{
+		$this->load->library('ion_auth');
 		$this->load->model('user_model');
-		die(json_encode($this->user_model->get_user($this->session->userdata('guid'))));
+		die(json_encode($this->user_model->get_user($this->session->userdata('user_id'), true)));
 	}
 
 	public function get_config() {
 		$this->load->config('dice_config');
 		die(json_encode($this->config->item('dice_config')));
+	}
+
+	public function set_password() {
+		
+		$post_data = file_get_contents('php://input');
+
+		$items = json_decode($post_data, true);
+		
+		if(
+			strlen($items['password']) >= $this->config->item('min_password_length', 'ion_auth') 
+			&& strlen($items['password'] <= $this->config->item('max_password_length', 'ion_auth')
+			&& $items['password'] == $items['password_confirm']	
+		)) {
+			$password = $items['password'];
+			$this->load->model('user_model');
+			$this->user_model->set_password($this->session->userdata('user_id'), $password);
+		} else {
+			die(json_encode(array('error'=>validation_errors())));
+		}
+
+		echo json_encode(array('success'=>true));
 	}
 
 	public function get_game() {
@@ -60,7 +85,110 @@ class Api extends CI_Controller {
 		}
 
 
+
 		
+	}
+
+	public function get_all_games() {
+		$this->load->model('game_model');
+
+		$games = $this->game_model->get_all_games();
+
+		if($games) {
+			echo json_encode($games);
+		} else {
+			echo json_encode(array());
+		}
+
+
+
+		
+	}
+
+	public function get_transactions() {
+		$this->load->model('transaction_model');
+
+		$trans = $this->transaction_model->get_transactions($this->session->userdata('user_id'));
+
+		if($trans) {
+			echo json_encode($trans);
+		} else {
+			echo json_encode(array());
+		}
+
+
+
+		
+	}
+
+	public function get_withdrawals() {
+		$this->load->model('withdrawal_model');
+
+		$trans = $this->withdrawal_model->get_all($this->session->userdata('user_id'));
+
+		if($trans) {
+			echo json_encode($trans);
+		} else {
+			echo json_encode(array());
+		}
+
+
+
+		
+	}
+
+	public function request_withdrawal(){
+
+		$this->load->config('btc_config');
+
+		$post_data = file_get_contents('php://input');
+
+		$post = json_decode($post_data, true);
+
+		$guid = $this->session->userdata('guid');
+		$address = $post['address'];
+		$amount = $post['amount'] * 100000000;
+
+		// check to make sure the address is valid
+		$this->load->library('bitcoinservice');
+		if(!$this->bitcoinservice->isValid($address)) {
+			die('bad address');	
+		}
+
+		$this->load->model('user_model');
+		$user = $this->user_model->get_user($this->session->userdata('user_id'));
+
+		if($amount > $user->available_balance) {
+			die('not enough funds');
+		}
+
+		$this->user_model->debit_balance($user->user_id, $amount);
+
+		$this->load->model('withdrawal_model');
+		$withdrawal_id = $this->withdrawal_model->new_withdrawal($user->user_id,$address, $amount);
+
+
+		$this->load->model('transaction_model');
+		$transaction_id = $this->transaction_model->enter_transaction($user->user_id, 'debit', $amount, $user->available_balance - $amount,  'Withdrawal');
+
+		if($amount <= $this->config->item('max_withdrawal_no_approval')) {
+			//$tran = $this->bitcoin->send($address, $amount);
+			$tran = '{ "message" : "Sent '.($amount / 100000000).' BTC to '.$address.'" , "tx_hash": "f322d01ad784e5deeb25464a5781c3b20971c1863679ca506e702e3e33c18e9c", "notice" : "Some funds are pending confirmation and cannot be spent yet (Value 0.001 BTC)" }';
+			$tran = json_decode($tran);
+
+			if(isset($tran->error)) {
+				$this->user_model->debit_balance($user->user_id, $amount);
+				$this->withdrawal_model->update_withdrawal($withdrawal_id, array('status' => 'cancelled'));
+			} else {
+				$this->withdrawal_model->update_withdrawal($withdrawal_id, array('transaction_hash'=>$tran->tx_hash,'status' => 'complete'));
+			}
+
+		} else {
+			$this->withdrawal_model->update_withdrawal($withdrawal_id, array('status' => 'held'));
+		}
+
+
+
 	}
 
 	function sortBySort($a, $b) {
@@ -95,13 +223,17 @@ class Api extends CI_Controller {
 
 	public function roll_dice(){
 
+		$post_data = file_get_contents('php://input');
+
+		$post = json_decode($post_data, true);
+
 		$this->load->model('game_model');
 		$game = $this->game_model->get_game($this->session->userdata('user_id'));
 
 		$this->load->config('dice_config');
 		$config = $this->config->item('dice_config');
 
-		$seed_array = $this->input->post('seeds');
+		$seed_array = $post['seeds'];
 
 		$seeds = array(
 			1 => $seed_array['seed_1'],
@@ -111,19 +243,19 @@ class Api extends CI_Controller {
 			5 => $seed_array['seed_5']
 			);
 
-		$held_array = $this->input->post('held_dice');
+		$held_array = $post['held_dice'];
 
 		if($game->rolls_remaining == 3) {
-			$stake = $this->input->post('stake');
+			$stake = $post['stake'];
 		} else {
 			$stake = 0;
 		}
 
 		$this->load->model('user_model');
-		$user = $this->user_model->get_user($this->session->userdata('guid'));
+		$user = $this->user_model->get_user($this->session->userdata('user_id'));
 		
 		if($stake > 0  && $stake <= $config['max_bet'] && $stake <= $user->available_balance) {
-			$this->user_model->debit_balance($this->session->userdata('guid'), $stake);
+			$this->user_model->debit_balance($user->user_id, $stake);
 			$this->load->model('transaction_model');
 			$this->transaction_model->enter_transaction($user->user_id, 'debit', $stake, $user->available_balance - $stake,  'Game #'.$game->id);
 		} else {
@@ -142,6 +274,7 @@ class Api extends CI_Controller {
 			'roll'=>$roll['roll'], 
 			'rolls_remaining'=> $roll['rolls_remaining'], 
 			'winning_rolls' => $winner,
+			'balance' => $user->available_balance
 			);
 
 		if(isset($winnings)) {

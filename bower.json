@@ -33,6 +33,14 @@
     "Plugins": "https://github.com/DataTables/Plugins.git",
     "restangular": "~1.4.0",
     "lodash": "~2.4.1",
-    "prettyprint.js": "https://github.com/padolsey/prettyprint.js.git"
+    "prettyprint.js": "https://github.com/padolsey/prettyprint.js.git",
+    "angular-match-media": "https://github.com/jacopotarantino/angular-match-media.git",
+    "bitcoin-php": "https://github.com/mikegogulski/bitcoin-php.git",
+    "angular-beforeunload": "~0.0.1"
+  },
+  "devDependencies": {
+    "Bootstrap-Admin-Template": "https://github.com/onokumus/Bootstrap-Admin-Template.git",
+    "angular-ui-router": "~0.2.10",
+    "ng-table": "https://github.com/esvit/ng-table.git#~0.3.3"
   }
 }

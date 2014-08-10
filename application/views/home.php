@@ -12,27 +12,19 @@
   <meta name="author" content="">
   <link rel="icon" href="../../favicon.ico">
 
-  <title>Bitcoin Dice</title>
+  <title>Bitcoin Poker Dice</title>
 
-  <!-- build:css css/app-name.min.css -->
+  <!-- build:css app.min.css -->
   <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-
-  <link rel="stylesheet" type="text/css" href="/bower_components/CSS-Playing-Cards/cards.css" media="screen" />
+  <link href="/bower_components/font-awesome/css/font-awesome.css" rel="stylesheet">
+  <link href="/bower_components/ng-table/ng-table.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="/bower_components/Plugins/integration/bootstrap/3/dataTables.bootstrap.css" media="screen" />
-    <!--[if lt IE 9]>
-        <link rel="stylesheet" type="text/css" href="/bower_components/CSS-Playing-Cards/cards-ie.css" media="screen" />
-    <![endif]-->
-    <!--[if IE 9]>
-        <link rel="stylesheet" type="text/css" href="/bower_components/CSS-Playing-Cards/cards-ie9.css" media="screen" />
-    <![endif]-->
-
-  <!-- Custom styles for this template -->
   <link href="/assets/css/style.css" rel="stylesheet">
+
   <!-- endbuild -->
   <script src="/bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-  <script src="/assets/js/ie10-workaround.js"></script>
+
 
   <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -41,7 +33,7 @@
       <![endif]-->
     </head>
 
-    <body>
+    <body ng-cloak>
 
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="navController">
         <div class="container">
@@ -52,15 +44,20 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a href="#/" class="navbar-brand visible-sm visible-xs">Bitcoin Poker Dice</a>
+            <a href="#/" class="navbar-brand visible-sm visible-xs">{{config.site_name}}</a>
           </div>
           <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-              <li class="active"><a href="#/">Play</a></li>
-              <li class=""><a href="#/payouts">Payouts</a></li>
-              <li class=""><a href="#/deposit">Deposit</a></li>              
+              <li ui-sref-active="active"><a ui-sref="home">{{lang.menu_home}}</a></li>
+              <li ui-sref-active="active" class="visible-xs visible-sm"><a ui-sref="payouts">{{lang.menu_payouts}}</a></li>
+              <li ui-sref-active="active"><a ui-sref="deposit">{{lang.menu_deposit}}</a></li>
+              <li ui-sref-active="active"><a ui-sref="withdraw">{{lang.menu_withdraw}}</a></li> 
+              <li ui-sref-active="active"><a ui-sref="affiliates">{{lang.menu_affiliates}}</a></li>
+              <li ui-sref-active="active"><a ui-sref="account">{{lang.menu_account}}</a></li> 
+              <li ui-sref-active="active"><a ui-sref="admin.dashboard">{{lang.menu_admin}}</a></li>              
             </ul>
             <ul class="nav navbar-nav navbar-right">
+              <li ng-controller="loginController" ng-show="user.has_password" ng-click="logout()"><a href="">Sign Out</a></li>
               <li><a ng-click="toggleMute()"><span ng-class="{'fa fa-volume-up': !sound_muted, 'fa fa-volume-off': sound_muted}"></span></a></li>
             </ul>
           </div><!--/.nav-collapse -->
@@ -69,15 +66,17 @@
       </div>
 
       <div class="container">
-        <div class="ng-view" autoscroll="true"></div>
+       <div class="ui-view"></div>
+       <!--  <div class="ng-view" autoscroll="true"></div> -->
       </div><!-- /.container -->
 
 </script>
-      <!-- build:js assets/build/js/app.min.js -->
+     <!-- build:js app.min.js -->
       <script src="/bower_components/jquery/dist/jquery.min.js"></script>
       <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
       <script src="/bower_components/angular/angular.min.js"></script>
-      <script src="/bower_components/angular-route/angular-route.js"></script>
+     <!-- <script src="/bower_components/angular-route/angular-route.js"></script>-->
+      <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
       <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
       <script src="/bower_components/lodash/dist/lodash.min.js"></script>
       <script src="/bower_components/restangular/dist/restangular.min.js"></script>
@@ -85,58 +84,30 @@
       <script src="/bower_components/soundmanager2/script/soundmanager2-nodebug-jsmin.js"></script>
       <script src="/bower_components/datatables/media/js/jquery.dataTables.js"></script>
       <script src="/bower_components/angular-datatables/dist/angular-datatables.min.js"></script>
-      
-      <script src="/assets/js/easing.js"></script>
+      <script src="/bower_components/ng-table/ng-table.js"></script>
       <script src="/assets/js/libs/jquery.jrumble.1.3.min.js"></script>
       <script src="/assets/js/app/app.js"></script>
       <script src="/assets/js/app/controllers.js"></script>
       <script src="/assets/js/app/directives.js"></script>
       <script src="/assets/js/app/filters.js"></script>
       <script src="/assets/js/app/services.js"></script>
-      <script src="<?=site_url('js');?>/index"></script>
       <!-- endbuild -->
+      <script src="<?=site_url('js/index');?>"></script>
+
  <script type="text/ng-template" id="dieTemplate">
-        <div class="card rank-{{diceValue}} hearts winner-cards">
-          <span class="rank">{{diceValue}}</span>
-          <span class="suit"><i class="fa fa-btc"></i></span>
-        </div>
-      </script>
+ <div class="equal-box">
+  <div class="card after-card {{size}} rank-{{diceValue}} hearts">
+
+  </div>
+  </div>
+</script>
       <script type="text/ng-template" id="diceTemplate">
-  <div class="playingCards fourColours faceImages rotateHand text-center">
-    <div class="row">
-      <div class="col-md-2 col-sm-2 col-xs-2 col-xs-offset-1 col-sm-offset-1 col-md-offset-1">
-        <a id="dice_1" class="card rank-q hearts" ng-click="toggleHold(1)">
-          <span class="rank">Q</span>
-          <span class="suit"><i class="fa fa-btc"></i></span>
-        </a>
-      </div>
-      <div class="col-md-2 col-xs-2">
-        <a id="dice_2" class="card rank-q hearts" ng-click="toggleHold(2)">
-          <span class="rank">Q</span>
-          <span class="suit"><i class="fa fa-btc"></i></span>
-        </a>
-      </div>
-      <div class="col-md-2 col-xs-2">
-        <a id="dice_3" class="card rank-q hearts" ng-click="toggleHold(3)">
-          <span class="rank">Q</span>
-          <span class="suit"><i class="fa fa-btc"></i></span>
-        </a>
-      </div>
-      <div class="col-md-2 col-xs-2">
-        <a id="dice_4" class="card rank-q hearts" ng-click="toggleHold(4)">
-          <span class="rank">Q</span>
-          <span class="suit"><i class="fa fa-btc"></i></span>
-        </a>
-      </div>
-      <div class="col-md-2 col-xs-2">
-        <a id="dice_5" class="card rank-q hearts" ng-click="toggleHold(5)">
-          <span class="rank">Q</span>
-          <span class="suit">&hearts;</span>
-        </a>
-      </div>
-
-
-    </div>
+  <div class="dice-container2 text-center">
+    <div id="dice_1" class="dice dice-a" ng-click="toggleHold(1)"></div>
+    <div id="dice_2" class="dice dice-a" ng-click="toggleHold(2)"></div>
+    <div id="dice_3" class="dice dice-a" ng-click="toggleHold(3)"></div>
+    <div id="dice_4" class="dice dice-a" ng-click="toggleHold(4)"></div>
+    <div id="dice_5" class="dice dice-a" ng-click="toggleHold(5)"></div> 
   </div>
 
 </script>
@@ -160,18 +131,48 @@
     <button class="btn btn-primary" ng-click="ok()">OK</button>
   </div>
 </script>
+<script type="text/ng-template" id="custom/pager">
+  <ul class="pager ng-cloak">
+    <li ng-repeat="page in pages"
+          ng-class="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}"
+          ng-show="page.type == 'prev' || page.type == 'next'" ng-switch="page.type">
+      <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo; Previous</a>
+      <a ng-switch-when="next" ng-click="params.page(page.number)" href="">Next &raquo;</a>
+    </li>
+      <li> 
+      <div class="btn-group">
+          <button type="button" ng-class="{'active':params.count() == 10}" ng-click="params.count(10)" class="btn btn-default">10</button>
+          <button type="button" ng-class="{'active':params.count() == 25}" ng-click="params.count(25)" class="btn btn-default">25</button>
+          <button type="button" ng-class="{'active':params.count() == 50}" ng-click="params.count(50)" class="btn btn-default">50</button>
+          <button type="button" ng-class="{'active':params.count() == 100}" ng-click="params.count(100)" class="btn btn-default">100</button>
+      </div>
+      </li>
+  </ul>
+</script>
 <script type="text/ng-template" id="qrModalTemplate">
   <div class="modal-header">
     <h3 class="modal-title">Make a Deposit</h3>
   </div>
   <div class="modal-body text-center">
+  <div class="panel panel-default">
+  <div class="spacer30"></div>
     <address-qr-code data-address="user.address"></address-qr-code>
-    <h3>{{user.address}}</h3>
+    <h3 class="black-text">{{user.address}}</h3>
+    </div>
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" ng-click="ok()">OK</button>
   </div>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
+  ga('create', 'UA-53576991-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 
 
 

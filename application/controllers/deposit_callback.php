@@ -25,15 +25,15 @@ class Deposit_callback extends CI_Controller {
 		$value = $this->input->get('value');
 		$input_address = $this->input->get('input_address');
 		$confirmations = $this->input->get('confirmations');
-		$secret = $this->input->post('secret');
+		$secret = $this->input->get('secret');
 
 		//Commented out to test, uncomment when live
-		if ($this->input->get('test') && $this->input_post('test') === true) {
+		if ($this->input->get('test')) {
 		  echo 'Ignoring Test Callback';
 		  return;
 		}
 
-		if ($_GET['secret'] != $this->config->item('secret')) {
+		if ($secret != $this->config->item('secret')) {
 		  echo 'Invalid Secret';
 		  return;
 		}
@@ -57,7 +57,7 @@ class Deposit_callback extends CI_Controller {
 			$deposit = $this->bitcoin_model->deposit($user->user_id, $transaction_hash, $value, $confirmations, $input_address);
 
 			// update the user balance
-			$this->user_model->credit_balance($user->guid, $value);
+			$this->user_model->credit_balance($user->user_id, $value);
 
 			// add a transaction
 			$this->load->model('transaction_model');

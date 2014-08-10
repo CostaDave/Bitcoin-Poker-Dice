@@ -82,7 +82,60 @@ class game_model extends CI_model
 				if($games[$i]->winning_hand != null) {
 					$this->load->config('dice_config');
 					$config = $this->config->item('dice_config');
-					$games[$i]->winning_hand = $config['odds'][$games[$i]->winning_hand]['name'];
+					$games[$i]->winning_hand = $config['hands'][$games[$i]->winning_hand]['name'];
+				}
+				$games[$i]->result = implode(',',$roll);
+				$games[$i]->stake = number_format($games[$i]->stake / 100000000,8);
+				$games[$i]->profit = number_format($games[$i]->profit / 100000000,8);
+				$games[$i]->rolls = 3 - $games[$i]->rolls_remaining;
+				$games[$i]->proof = '';
+
+
+			}
+			return $games;
+		} else {
+			return false;
+		}
+	}
+
+	function get_all_games() {
+		$this->load->database();
+		$this->db->select('games.*');
+		$this->db->order_by('id', 'desc');
+		$this->db->join('users', 'users.user_id = games.user_id');
+		$this->db->where(array('complete' => 1));
+		$this->db->limit('100');
+		$query = $this->db->get('games');
+
+		if($query->num_rows() > 0) {
+			$games = $query->result();
+			for($i=0;$i<count($games);$i++) {
+				$final_array = json_decode($games[$i]->final_array, true);
+
+				if(empty($final_array['roll_2'])) {
+					$roll_num = 1;
+				} elseif (empty($final_array['roll_3'])) {
+					$roll_num = 2;
+				} else {
+					$roll_num = 3;
+				}
+
+				$roll_array = $final_array['roll_'.$roll_num];
+
+				if(isset($roll_array[1])) {
+					$roll = array(
+						'dice_1' => $roll_array[1][0],
+						'dice_2' => $roll_array[2][0],
+						'dice_3' => $roll_array[3][0],
+						'dice_4' => $roll_array[4][0],
+						'dice_5' => $roll_array[5][0],
+						);
+				}
+				
+				if($games[$i]->winning_hand != null) {
+					$this->load->config('dice_config');
+					$config = $this->config->item('dice_config');
+					$games[$i]->winning_hand = $config['hands'][$games[$i]->winning_hand]['name'];
 				}
 				$games[$i]->result = implode(',',$roll);
 				$games[$i]->stake = number_format($games[$i]->stake / 100000000,8);
@@ -114,7 +167,7 @@ function score_game($roll) {
 		$dice[$die] += 1;
 	}
 
-	foreach($config['odds'] as $k => $v) {
+	foreach($config['hands'] as $k => $v) {
 		$winning_rolls[$k] = false;
 	}
 
@@ -241,18 +294,28 @@ function collect_game($game_id = false){
 	$amount = 0;
 
 	$this->load->model('user_model');
-	$user = $this->user_model->get_user($this->session->userdata('guid'));
+	$user = $this->user_model->get_user($this->session->userdata('user_id'));
 
 	if($winner) {
-		$payout = $config['odds'][$winner]['payout']['roll_'.$roll_num];
+		$payout = $config['hands'][$winner]['payout']['roll_'.$roll_num];
 		$this->game_model->update_game($game->id, array('winning_hand' => $winner));
 		if($payout > 0) {
 			$amount = $game->stake * $payout;
 			$this->game_model->update_game($game->id, array('profit' => $amount));
-
-			$this->user_model->credit_balance($this->session->userdata('guid'), $amount);
+			if($amount > 0) {
+				$this->user_model->credit_balance($user->user_id, $amount);
+				$this->load->model('transaction_model');
+				$this->transaction_model->enter_transaction($user->user_id, 'credit', $amount, $user->available_balance + $amount,  'Game #'.$game->id.' - '.$config['hands'][$winner]['name']. ' Roll #'.$roll_num);
+			}
+		}
+	} else {
+		// we may have an affiliate to pay
+		if($user->affiliate_user_id) {
+			$affiliate_payout = $game->stake * $config['affiliate_percent'];
+			$aff_parent = $this->user_model->get_user($user->affiliate_user_id);
+			$this->user_model->credit_balance($aff_parent->user_id, $affiliate_payout);
 			$this->load->model('transaction_model');
-			$this->transaction_model->enter_transaction($user->user_id, 'credit', $amount, $user->available_balance + $amount,  'Game #'.$game->id.' - '.$config['odds'][$winner]['name']. ' Roll #'.$roll_num);
+			$this->transaction_model->enter_transaction($aff_parent->user_id, 'credit', $affiliate_payout, $aff_parent->available_balance + $affiliate_payout,  'Affiliate Earnings');
 		}
 	}
 
