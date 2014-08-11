@@ -11,8 +11,8 @@
         <form class="form-signin" role="form" ng-submit="login(credentials)">
         <h4 class="form-signin-heading black-text">Please Sign In</h4>
         <input type="password" class="form-control" placeholder="Password" ng-model="credentials.password" required>
-        <div class="spacer10"></div>
-        <input type="text" class="form-control" placeholder="One Time Password (Optional)" ng-model="credentials.one_time_pass">
+        <!-- <div class="spacer10"></div>
+        <input type="text" class="form-control" placeholder="One Time Password (Optional)" ng-model="credentials.one_time_pass"> -->
         <hr>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>

@@ -103,7 +103,7 @@ class game_model extends CI_model
 		$this->db->select('games.*');
 		$this->db->order_by('id', 'desc');
 		$this->db->join('users', 'users.user_id = games.user_id');
-		$this->db->where(array('complete' => 1));
+		$this->db->where(array('complete' => 1, 'stake >' => 0));
 		$this->db->limit('100');
 		$query = $this->db->get('games');
 

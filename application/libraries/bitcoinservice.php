@@ -45,6 +45,30 @@ class Bitcoinservice {
 		return $this->sendGet($url,$opts);
 	}
 
+	function send_many($arr) {
+
+		$recipients = '{';
+
+		foreach($arr as $payment) {
+			$recipients .= '"'.$payment['address'].'":'.$payment['value'].',';
+		}
+
+		$recipients = rtrim($recipients,',');
+		$recipients .= '}';
+		
+		$CI =& get_instance();
+		$CI->config->load('btc_config');
+
+		$opts = array(
+			'password' => $CI->config->item('blockchain_password'),
+			'recipients'						=> $recipients,
+			);
+
+		$url = $this->bc_api.$CI->config->item('blockchain_identifier').'/sendmany?';
+
+		return $this->sendGet($url,$opts);
+	}
+
 
 	// function get_address1($guid) {
 	// 	$CI =& get_instance();
@@ -93,6 +117,7 @@ class Bitcoinservice {
 			));
 		// Send the request & save response to $resp
 		$resp = curl_exec($curl);
+
 		// Close request to clear up some resources
 		curl_close($curl);
 

@@ -36,7 +36,8 @@
     "prettyprint.js": "https://github.com/padolsey/prettyprint.js.git",
     "angular-match-media": "https://github.com/jacopotarantino/angular-match-media.git",
     "bitcoin-php": "https://github.com/mikegogulski/bitcoin-php.git",
-    "angular-beforeunload": "~0.0.1"
+    "angular-beforeunload": "~0.0.1",
+    "ngprogress": "~1.0.4"
   },
   "devDependencies": {
     "Bootstrap-Admin-Template": "https://github.com/onokumus/Bootstrap-Admin-Template.git",

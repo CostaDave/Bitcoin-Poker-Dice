@@ -12,7 +12,7 @@
           <td data-title="'Profit'" sortable="'profit'">{{game.profit|number:8}}</td>
           <td data-title="'Winning Hand'" sortable="'winning_hand'">{{game.winning_hand}}</td>
           <td data-title="'Rolls'" sortable="'rolls'">{{3 - game.rolls_remaining}}</td>
-          <td data-title="'Proof'"><a ui-sref="proof({game_id:game.id})">Show Proof</a></td>
+          <td data-title="'Proof'"><a class="btn btn-success" ui-sref="proof({game_id:game.id})">Show Proof</a></td>
         </tr>
       </table>
     </div>

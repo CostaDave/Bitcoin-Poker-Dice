@@ -61,34 +61,77 @@ class Admin_api extends CI_Controller {
 		echo json_encode($data);
 	}
 
-	public function get_games() {
-		$this->load->model('game_model');
+	public function process_withdrawals() {
+		$this->load->model('withdrawal_model');
 
-		$games = $this->game_model->get_all_games();
+		$post_data = file_get_contents('php://input');
 
-		if($games) {
-			echo json_encode($games);
+		$items = json_decode($post_data, true)['withdrawals']['items'];
+
+		$i=0;
+		foreach($items as $k => $v) {
+			if($v) {
+				$wd = $this->withdrawal_model->get($k);
+				$withdrawals[$i]['id'] = $wd->id;
+				$withdrawals[$i]['address'] = $wd->destination_address;
+				$withdrawals[$i]['value'] = $wd->value;
+			}
+			$i++;
+			
+		}
+
+		$this->load->library('bitcoinservice');
+		$resp = json_decode($this->bitcoinservice->send_many($withdrawals),true);
+
+		if(isset($resp['error'])) {
+			die(json_encode(array('success'=>false)));
 		} else {
-			echo json_encode(array());
+			foreach($withdrawals as $wd) {
+				$this->withdrawal_model->update_withdrawal($wd['id'], array('trancastion_hash', $resp['tx_hash']));
+			}
+			die(json_encode(array('success'=>true)));
 		}
 	}
 
-	public function get_games_by_user($user_id) {
-		$this->load->model('game_model');
+public function get_pending_withdrawals() {
+	$this->load->model('withdrawal_model');
 
-		$games = $this->game_model->get_games($user_id);
-
-		if($games) {
-			echo json_encode($games);
-		} else {
-			echo json_encode(array());
-		}
-
-
-
-		
+	$data['withdrawals'] = $this->withdrawal_model->get_all_pending();
+	if(!$data['withdrawals']) {
+		$data['withdrawals'] = array();
 	}
-	
+
+	echo json_encode($data);
+}
+
+public function get_games() {
+	$this->load->model('game_model');
+
+	$games = $this->game_model->get_all_games();
+
+	if($games) {
+		echo json_encode($games);
+	} else {
+		echo json_encode(array());
+	}
+}
+
+public function get_games_by_user($user_id) {
+	$this->load->model('game_model');
+
+	$games = $this->game_model->get_games($user_id);
+
+	if($games) {
+		echo json_encode($games);
+	} else {
+		echo json_encode(array());
+	}
+
+
+
+
+}
+
 }
 
 /* End of file welcome.php */

@@ -26,7 +26,7 @@
       <![endif]-->
     </head>
 
-    <body>
+    <body ng-cloak ng-contoller="applicationController">
 
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="navController">
         <div class="container">
@@ -41,14 +41,16 @@
           </div>
           <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-              <li ng-class="{active: active_nav == 'play'}" ng-click="changeNav('play')"><a href="#/">Play</a></li>
-              <li ng-class="{active: active_nav == 'payouts'}" ng-click="changeNav('payouts')" class="visible-xs visible-sm"><a href="#/payouts">Payouts</a></li>
-              <li ng-class="{active: active_nav == 'deposit'}" ng-click="changeNav('deposit')"><a href="#/deposit">Deposit</a></li>
-              <li ng-class="{active: active_nav == 'withdraw'}" ng-click="changeNav('withdraw')"><a href="#/withdraw">Withdraw</a></li> 
-              <li ng-class="{active: active_nav == 'affiliates'}" ng-click="changeNav('affiliates')"><a href="#/affiliates">Affiliates</a></li>
-              <li ng-class="{active: active_nav == 'account'}" ng-click="changeNav('account')"><a href="#/account">Account</a></li>               
+              <li ui-sref-active="active"><a ui-sref="home">{{lang.menu_home}}</a></li>
+              <li ui-sref-active="active" class="visible-xs visible-sm"><a ui-sref="payouts">{{lang.menu_payouts}}</a></li>
+              <li ui-sref-active="active"><a ui-sref="deposit">{{lang.menu_deposit}}</a></li>
+              <li ui-sref-active="active"><a ui-sref="withdraw">{{lang.menu_withdraw}}</a></li> 
+              <li ui-sref-active="active"><a ui-sref="affiliates">{{lang.menu_affiliates}}</a></li>
+              <li ui-sref-active="active"><a ui-sref="account">{{lang.menu_account}}</a></li> 
+              <li ng-show="user.role == 'admin'" ui-sref-active="active"><a ui-sref="admin.dashboard">{{lang.menu_admin}}</a></li>              
             </ul>
             <ul class="nav navbar-nav navbar-right">
+              <li ng-controller="loginController" ng-show="user.has_password" ng-click="logout()"><a href="">Sign Out</a></li>
               <li><a ng-click="toggleMute()"><span ng-class="{'fa fa-volume-up': !sound_muted, 'fa fa-volume-off': sound_muted}"></span></a></li>
             </ul>
           </div><!--/.nav-collapse -->
@@ -57,7 +59,8 @@
       </div>
 
       <div class="container">
-        <div class="ng-view" autoscroll="true"></div>
+       <div class="ui-view"></div>
+       <!--  <div class="ng-view" autoscroll="true"></div> -->
       </div><!-- /.container -->
 
 </script>
@@ -101,6 +104,24 @@
     <button class="btn btn-primary" ng-click="ok()">OK</button>
   </div>
 </script>
+<script type="text/ng-template" id="custom/pager">
+  <ul class="pager ng-cloak">
+    <li ng-repeat="page in pages"
+          ng-class="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}"
+          ng-show="page.type == 'prev' || page.type == 'next'" ng-switch="page.type">
+      <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo; Previous</a>
+      <a ng-switch-when="next" ng-click="params.page(page.number)" href="">Next &raquo;</a>
+    </li>
+      <li> 
+      <div class="btn-group">
+          <button type="button" ng-class="{'active':params.count() == 10}" ng-click="params.count(10)" class="btn btn-default">10</button>
+          <button type="button" ng-class="{'active':params.count() == 25}" ng-click="params.count(25)" class="btn btn-default">25</button>
+          <button type="button" ng-class="{'active':params.count() == 50}" ng-click="params.count(50)" class="btn btn-default">50</button>
+          <button type="button" ng-class="{'active':params.count() == 100}" ng-click="params.count(100)" class="btn btn-default">100</button>
+      </div>
+      </li>
+  </ul>
+</script>
 <script type="text/ng-template" id="qrModalTemplate">
   <div class="modal-header">
     <h3 class="modal-title">Make a Deposit</h3>
@@ -115,6 +136,18 @@
   <div class="modal-footer">
     <button class="btn btn-primary" ng-click="ok()">OK</button>
   </div>
+</script>
+<script type="text/ng-template" id="processWithdrawalsTemplate">
+  <div class="modal-header">
+    <h3 class="modal-title">Process Withdrawals</h3>
+  </div>
+  <div class="modal-body text-center">
+  <h4>Are you sure you want to process {{withdrawal_count}} withdrawals for BTC {{withdrawal_sum / 100000000 |number:8}}?</h4>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="processPending()">OK</button>
+  </div>
+</script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -65,7 +65,7 @@ class user_model extends CI_model
 		if($login) {
 			return $this->get_user($user_id, true);
 		} else {
-			return array('success'=>false);
+			return array('error'=>true);
 		}
 	}
 

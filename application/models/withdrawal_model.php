@@ -21,6 +21,32 @@ class withdrawal_model extends CI_model
 			return false;
 		}
 	}
+
+	function get_all_pending($user_id = false, $limit = false) {
+		$this->load->database();
+		if($user_id) {
+			$this->db->where('user_id', $user_id);
+		}
+
+		if($limit) {
+			$this->db->limit($limit);
+		}
+		
+		$this->db->where('status', 'held');
+		$query = $this->db->get('withdrawals');
+		if($query->num_rows() > 0) {
+			return $query->result();
+		} else {
+			return false;
+		}
+	}
+
+	function get($id) {
+		$this->load->database();
+
+		$this->db->where('id', $id);
+		return $this->db->get('withdrawals')->row();
+	}
 	
 	function get_pending_amount() {
 		$this->load->database();

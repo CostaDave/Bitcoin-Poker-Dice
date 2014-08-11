@@ -17,7 +17,11 @@ value('version', '0.1')
           "Content-Type": "application/x-www-form-urlencoded "
       }
     }).success(function(res){
-      Session.create(res[0].guid, res[0].user_id, res[0].role);
+      if('undefined' == typeof res[0].error) {
+        Session.create(res[0].guid, res[0].user_id, res[0].role);
+      } else {
+        res = false;
+      }
       deferred.resolve(res);
     }).error(function(){
       deferred.reject("An error occured while loggin in");
@@ -108,6 +112,10 @@ value('version', '0.1')
       var roll = Restangular.one('api/roll_dice');
       return roll.post('roll_dice', params);
     },
+    collectWin: function(params) {
+      var roll = Restangular.one('api/collect');
+      return roll.post('collect', params);
+    },
     setPassword: function(params) {
       var call = Restangular.one('api/set_password');
       return call.post('set_password', params);
@@ -136,6 +144,14 @@ value('version', '0.1')
     getWithdrawals: function() {
       return Restangular.one("admin_api/get_withdrawals").get();
     },
+    getPendingWithdrawals: function() {
+      return Restangular.one("admin_api/get_pending_withdrawals").get();
+    },
+    processWithdrawals: function(params) {
+      console.log(params)
+      var call = Restangular.one('admin_api/process_withdrawals');
+      return call.post('process_withdrawals', params);
+    },
     getGames: function(){
         return Restangular.all('admin_api/get_games').getList();
     },
@@ -154,118 +170,4 @@ value('version', '0.1')
         return Restangular.one('admin_api/get_all_users/').getList();
     },
   };
-}])
-.service('diceService',['$http', '$q', function($http, $q){
-	var apiPath = 'api';
-	var diceService = {};
-	var dice = [];
-	var is_rolling = false;
-
-	return{
-      apiPath:'api',
-      get: function(){
-      	return dice;
-      },
-      getGames: function(){
-      	var deferred = $q.defer();
-        $http({
-	        url: this.apiPath+'/getGames',
-	        method: "GET"
-	      }).success(function(data){
-          deferred.resolve(data);
-        }).error(function(){
-        deferred.reject("An error occured while fetching dice");
-        });
-        return deferred.promise;
-      },
-      isRolling: function(){
-      	return is_rolling;
-      },
-      set: function(obj){
-				angular.forEach(obj, function(value, key){
-					console.log('value '+value, key)
-					dice.push(value)
-				});
-				return;
-			},
-			get_game: function(){
-				var deferred = $q.defer();
-        $http({
-	        url: this.apiPath+'/get_game',
-	        method: "GET"
-	      }).success(function(data){
-          deferred.resolve(data);
-        }).error(function(){
-        deferred.reject("An error occured while fetching dice");
-        });
-        return deferred.promise;
-			},
-      getAllGames: function(){
-        var deferred = $q.defer();
-        $http({
-          url: this.apiPath+'/get_all_games',
-          method: "GET"
-        }).success(function(data){
-          deferred.resolve(data);
-        }).error(function(){
-        deferred.reject("An error occured while fetching dice");
-        });
-        return deferred.promise;
-      },
-			collect_win: function(){
-				var deferred = $q.defer();
-        $http({
-	        url: this.apiPath+'/collect',
-	        method: "POST"
-	      }).success(function(data){
-          deferred.resolve(data);
-        }).error(function(){
-        deferred.reject("An error occured while fetching dice");
-        });
-        return deferred.promise;
-			},
-      roll_dice: function(params,client_seeds, held_dice, stake){
-      	is_rolling = true;
-        var deferred = $q.defer();
-        var data = $.param(params);
-        $http({
-	        url: this.apiPath+'/roll_dice',
-	        data: data,
-	        method: "POST",
-	        headers: {
-	            "Content-Type": "application/x-www-form-urlencoded "
-	        }
-	      }).success(function(data){
-          deferred.resolve(data);
-          is_rolling = false;
-        }).error(function(){
-        	deferred.reject("An error occured while fetching dice");
-        });
-        return deferred.promise;
-      }
-  }
-}])
-.service('diceData', function($http, $q){
-	var apiPath = 'api',
-  sdo = {
-		getConfig: function() {
-			var promise = $http({ method: 'POST', url: apiPath+'/roll_dice' }).success(function(data, status, headers, config) {
-				return data;
-			});
-			return promise;
-		}
-	}
-	return sdo;
-})
-.service('appData',function($http, $q){
-	var apiPath = 'api',
-  sdo = {
-		getConfig: function() {
-			var promise = $http({ method: 'GET', url: apiPath+'/get_config' }).success(function(data, status, headers, config) {
-				return data;
-			});
-			return promise;
-		}
-	}
-	return sdo;
-});
+}]);

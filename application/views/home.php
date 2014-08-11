@@ -18,6 +18,7 @@
   <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="/bower_components/font-awesome/css/font-awesome.css" rel="stylesheet">
   <link href="/bower_components/ng-table/ng-table.css" rel="stylesheet">
+  <link href="/bower_components/ngprogress/ngProgress.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="/bower_components/Plugins/integration/bootstrap/3/dataTables.bootstrap.css" media="screen" />
   <link href="/assets/css/style.css" rel="stylesheet">
 
@@ -33,7 +34,7 @@
       <![endif]-->
     </head>
 
-    <body ng-cloak>
+    <body ng-cloak ng-contoller="applicationController">
 
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller="navController">
         <div class="container">
@@ -54,7 +55,7 @@
               <li ui-sref-active="active"><a ui-sref="withdraw">{{lang.menu_withdraw}}</a></li> 
               <li ui-sref-active="active"><a ui-sref="affiliates">{{lang.menu_affiliates}}</a></li>
               <li ui-sref-active="active"><a ui-sref="account">{{lang.menu_account}}</a></li> 
-              <li ui-sref-active="active"><a ui-sref="admin.dashboard">{{lang.menu_admin}}</a></li>              
+              <li ng-show="user.role == 'admin'" ui-sref-active="active"><a ui-sref="admin.dashboard">{{lang.menu_admin}}</a></li>              
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li ng-controller="loginController" ng-show="user.has_password" ng-click="logout()"><a href="">Sign Out</a></li>
@@ -85,6 +86,7 @@
       <script src="/bower_components/datatables/media/js/jquery.dataTables.js"></script>
       <script src="/bower_components/angular-datatables/dist/angular-datatables.min.js"></script>
       <script src="/bower_components/ng-table/ng-table.js"></script>
+      <script src="/bower_components/ngprogress/build/ngProgress.js"></script>
       <script src="/assets/js/libs/jquery.jrumble.1.3.min.js"></script>
       <script src="/assets/js/app/app.js"></script>
       <script src="/assets/js/app/controllers.js"></script>
@@ -163,6 +165,18 @@
   <div class="modal-footer">
     <button class="btn btn-primary" ng-click="ok()">OK</button>
   </div>
+</script>
+<script type="text/ng-template" id="processWithdrawalsTemplate">
+  <div class="modal-header">
+    <h3 class="modal-title">Process Withdrawals</h3>
+  </div>
+  <div class="modal-body text-center">
+  <h4>Are you sure you want to process {{withdrawal_count}} withdrawals for BTC {{withdrawal_sum / 100000000 |number:8}}?</h4>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="processPending()">OK</button>
+  </div>
+</script>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

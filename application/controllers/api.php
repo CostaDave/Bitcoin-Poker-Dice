@@ -24,7 +24,13 @@ class Api extends CI_Controller {
 	{
 		$this->load->library('ion_auth');
 		$this->load->model('user_model');
-		die(json_encode($this->user_model->get_user($this->session->userdata('user_id'), true)));
+		$user = $this->user_model->get_user($this->session->userdata('user_id'));
+		if($this->ion_auth->logged_in()) {
+			$user->logged_in = true;
+		} else {
+			$user->logge_in = false;
+		}
+		die(json_encode($user, true));
 	}
 
 	public function get_config() {

@@ -28,7 +28,7 @@
             <td data-title="'ID'">{{wd.id}}</td>
             <td data-title="'Date'">{{wd.updated_on}}</td>
             <td data-title="'Amount'">{{wd.value / 100000000 | number:8}}</td>
-            <td data-title="'Tran Hash'">{{wd.transaction_hash}}</td>
+            <td data-title="'Address'">{{wd.destination_address}}</td>
             <td data-title="'Status'">{{wd.status}}</td>
         </tr>
         </table>

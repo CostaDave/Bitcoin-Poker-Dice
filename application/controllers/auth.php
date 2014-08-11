@@ -21,7 +21,7 @@ class Auth extends CI_Controller {
 
 	public function logout() {
 		$this->load->model('user_model');
-		$response = $this->user_model->logout($this->user_id);
+		$response = $this->user_model->logout($this->session->userdata('user_id'));
 
 		die(json_encode(array('success'=>true)));
 	}

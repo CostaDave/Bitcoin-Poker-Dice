@@ -3,7 +3,7 @@
 <hr />
   <div class="row">
     <div class="col-md-12">
-      <table ng-table="tableParams" show-filter="true" class="table table-bordered table-striped">
+      <table ng-table="tableParams" class="table table-bordered table-striped">
         <tr ng-repeat="user in $data">
           <td data-title="'ID'" sortable="'user_id * 1'"><a ui-sref="admin.user({user_id:user.user_id})">{{user.user_id}}</a></td>
           <td data-title="'GUID'" sortable="'guid'" filter="{ 'guid.toString()': 'text' }">{{user.guid}}</td>

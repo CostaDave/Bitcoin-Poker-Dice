@@ -2,6 +2,7 @@
 
 angular.module(
   'bitcoinDice', [
+  'ngProgress',
   'datatables',
   'ui.bootstrap',
   'ui.router',
@@ -108,16 +109,16 @@ config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', funct
     url: "/proof/:game_id",
     templateUrl: function(params){ return appConfig.site_url+'/proof/game/' + params.game_id},
     data: {
-      authorizedRoles: [USER_ROLES.all]
+      authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]
     }
   })
   .state('admin', {
     url: "/admin",
     controller: 'adminController',
     resolve: {
-      adminData: function(adminApi) {
+      adminData:['adminApi', function(adminApi) {
         return adminApi.getAdminData();
-      }
+      }]
     },
     templateUrl: appConfig.site_url+'/admin/partials/home',
     data: {
@@ -128,12 +129,12 @@ config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', funct
     url: "/dashboard",
     controller: 'adminDashboardController',
     resolve: {
-      adminData: function(adminApi) {
+      adminData:['adminApi', function(adminApi) {
         return adminApi.getAdminData();
-      },
-      games: function(adminApi) {
+      }],
+      games:['adminApi', function(adminApi) {
         return adminApi.getGames();
-      },
+      }],
       users:['$stateParams', 'adminApi', function($stateParams, adminApi) {
         return adminApi.getUsers();
       }]
@@ -147,9 +148,9 @@ config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', funct
     url: "/games",
     controller: 'adminGamesController',
     resolve: {
-      games: function(adminApi) {
+      games:['adminApi', function(adminApi) {
         return adminApi.getGames();
-      }
+      }]
     },
     templateUrl: appConfig.site_url+'/admin/partials/games_list',
     data: {
@@ -202,9 +203,12 @@ config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', funct
     url: "/withdrawals",
     controller: 'adminWithdrawController',
     resolve: {
-      withdrawals: function(adminApi) {
+      withdrawals:['adminApi', function(adminApi) {
         return adminApi.getWithdrawals();
-      }
+      }],
+      pendingWithdrawals: ['adminApi', function(adminApi) {
+        return adminApi.getPendingWithdrawals();
+      }]
     },
     templateUrl: appConfig.site_url+'/admin/partials/withdrawals',
     data: {
@@ -212,14 +216,20 @@ config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', funct
     }
   })
 }])
-.run(['$rootScope', '$state', '$location', 'AuthService', 'userDefault', 'AUTH_EVENTS', function($rootScope, $state, $location, AuthService, userDefault, AUTH_EVENTS){
+.run(['$rootScope', '$state', '$location', 'AuthService', 'userDefault', 'AUTH_EVENTS', 'ngProgress', function($rootScope, $state, $location, AuthService, userDefault, AUTH_EVENTS, ngProgress){
 $rootScope.$on('$stateChangeStart', function (event, next) {
+    
+    ngProgress.color('#52fb1e');
+    ngProgress.complete();
+    ngProgress.start();  
+
     var user;
 
     if('undefined' == typeof $rootScope.user) {
       user = userDefault;
       if(user.logged_in) {
         AuthService.createSession(user.guid, user.user_id, user.role);
+        $rootScope.user = user;
       }
     } else {
       user = $rootScope.user;
@@ -238,5 +248,9 @@ $rootScope.$on('$stateChangeStart', function (event, next) {
         }
       }
     }    
+  });
+$rootScope.$on('$stateChangeSuccess', function (event, next) {
+    
+    ngProgress.complete();     
   });
 }]);

@@ -629,6 +629,6 @@ input {
   border:thin red solid;
 }
 
-.account-settings {
-  color:black !important;
+#ngProgress-container {
+    top: 50px;
 }

@@ -11,6 +11,8 @@ $lang['rolls_remaining'] = 'Rolls Remaining';
 $lang['my_games'] = 'My Games';
 $lang['global_games'] = 'Global Games';
 $lang['no_records'] = 'No Records to Display';
+$lang['login_failed'] = 'Your login information is incorrect';
+$lang['password_set'] = 'Your password has been set, please log in to continue';
 
 // main nav menu
 $lang['menu_home'] = 'Play';

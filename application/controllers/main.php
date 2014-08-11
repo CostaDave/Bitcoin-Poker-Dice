@@ -32,8 +32,6 @@ class Main extends CI_Controller {
 		$this->session->set_userdata('guid', $this->input->get('user'));
 		$this->session->set_userdata('user_id', $user->user_id);
 
-		// echo $guid;
-		// die('here');
 		$this->load->view('home');
 	}
 }

@@ -44,7 +44,7 @@ directive('appVersion', ['version', function(version) {
     }
   }
 })
-.directive('diceDirective',['$rootScope', 'diceService', '$timeout', '$interval', function($rootScope, diceService, $timeout, $interval) {
+.directive('diceDirective',['$rootScope', '$timeout', '$interval', function($rootScope, $timeout, $interval) {
 	return  {
 		restrict: 'E',
 		replace: 'false',
@@ -112,16 +112,7 @@ return {
 
         sort.sortingOrder = newSortingOrder;        
     };
-    
-   
-    // scope.selectedCls = function(column) {
-    //     if(column == scope.sort.sortingOrder){
-    //         return ('icon-chevron-' + ((scope.sort.reverse) ? 'down' : 'up'));
-    //     }
-    //     else{            
-    //         return'icon-sort' 
-    //     } 
-    // };      
+
   }// end link
 }
 });;
