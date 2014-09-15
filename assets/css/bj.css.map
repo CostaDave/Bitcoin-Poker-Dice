@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAEA,QAAS;EACR,KAAK,EAHM,KAAK;EAKhB,WAAG;IACF,KAAK,EAAC,GAAG",
-"sources": ["blackjack.scss"],
-"names": [],
-"file": "bj.css"
-}
