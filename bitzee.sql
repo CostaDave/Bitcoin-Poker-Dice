@@ -11,7 +11,7 @@
  Target Server Version : 50537
  File Encoding         : utf-8
 
- Date: 08/10/2014 23:49:03 PM
+ Date: 09/16/2014 15:36:26 PM
 */
 
 SET NAMES utf8;
@@ -40,7 +40,10 @@ DROP TABLE IF EXISTS `games`;
 CREATE TABLE `games` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
+  `game_type` enum('videopoker','pokerdice','blackjack') DEFAULT NULL,
+  `paytable` varchar(255) DEFAULT NULL,
   `initial_array` text,
+  `shuffled_array` text,
   `server_seeds` text,
   `client_seeds` text,
   `final_array` text,
@@ -53,7 +56,31 @@ CREATE TABLE `games` (
   `updated_on` datetime DEFAULT NULL,
   `complete` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1388 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1752 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+--  Table structure for `games_vp`
+-- ----------------------------
+DROP TABLE IF EXISTS `games_vp`;
+CREATE TABLE `games_vp` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `initial_deck` text,
+  `shuffled_deck` text,
+  `server_seeds` text,
+  `paytable` varchar(255) DEFAULT NULL,
+  `client_seed` text,
+  `final_array` text,
+  `deals_remaining` tinyint(4) DEFAULT '2',
+  `stake` int(11) DEFAULT NULL COMMENT 'kj',
+  `profit` bigint(20) DEFAULT NULL,
+  `winning_hand` varchar(255) DEFAULT NULL,
+  `hash` varchar(255) DEFAULT NULL,
+  `created_on` datetime DEFAULT NULL,
+  `updated_on` datetime DEFAULT NULL,
+  `complete` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1250 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 --  Table structure for `login_attempts`
@@ -65,7 +92,7 @@ CREATE TABLE `login_attempts` (
   `login` varchar(100) NOT NULL,
   `time` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `rolls`
@@ -99,7 +126,7 @@ CREATE TABLE `transactions` (
   `created_on` datetime DEFAULT NULL,
   `updated_on` datetime DEFAULT NULL,
   PRIMARY KEY (`id`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=762 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1543 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 --  Table structure for `users`
@@ -108,8 +135,11 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `guid` varchar(36) NOT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `salt` varchar(255) DEFAULT NULL,
+  `timezone` varchar(255) DEFAULT NULL,
   `tfa_enabled` tinyint(4) DEFAULT NULL,
   `is_admin` tinyint(4) DEFAULT NULL,
   `tfa_seed` varchar(16) DEFAULT NULL,
@@ -125,7 +155,7 @@ CREATE TABLE `users` (
   `created_on` datetime DEFAULT NULL,
   `updated_on` datetime DEFAULT NULL,
   PRIMARY KEY (`user_id`,`guid`)
-) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=169 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 --  Table structure for `withdrawals`
@@ -141,6 +171,6 @@ CREATE TABLE `withdrawals` (
   `created_on` datetime DEFAULT NULL,
   `updated_on` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 SET FOREIGN_KEY_CHECKS = 1;
