@@ -163,7 +163,7 @@ function score_game($roll) {
 	$dice['K'] = 0;
 	$dice['A'] = 0;
 
-	foreach($roll as $die) {
+	foreach($roll['roll'] as $die) {
 		$dice[$die] += 1;
 	}
 

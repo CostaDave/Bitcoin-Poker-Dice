@@ -2,6 +2,7 @@
 
 angular.module(
   'bitcoinDice', [
+  'blockUI',
   'ngProgress',
   'datatables',
   'ui.bootstrap',
@@ -13,16 +14,26 @@ angular.module(
   'bitcoinDice.directives',
   'bitcoinDice.controllers'
   ]).
-config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', function($stateProvider, $urlRouterProvider, appConfig, USER_ROLES){
+config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', 'blockUIConfigProvider', function($stateProvider, $urlRouterProvider, appConfig, USER_ROLES, blockUIConfigProvider){
   
-  $urlRouterProvider.otherwise("/play");
+  //blockUIConfigProvider.template('<div class="block-ui-overlay"><strong>{{ message }}</strong>!!!</div>');
+
+  $urlRouterProvider.otherwise("/home");
 
   $stateProvider
   .state('home', {
-    url: "/play",
+    url: "/home",
     controller: 'ApplicationController',
     templateUrl: appConfig.site_url+'/partials/index/home_page',
     resolve: {
+      pageConfig: ['lang', function(lang) {
+          var obj = {
+            lang: lang,
+            body_class:'home'
+          };
+          return obj;
+        }],
+
       game: ['api',function(api) {
         return api.getGame();
       }],
@@ -31,6 +42,16 @@ config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', funct
       }]
     },
     data: {
+      pageTitle: 'Bitcoin Casino and Sports Betting Exchange',
+      authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]
+    }
+  })
+  .state('exchange', {
+    url: "/exchange",
+    //controller: 'payoutController',
+    templateUrl: appConfig.site_url+'/partials/index/exchange_home',
+    data: {
+      pageTitle: 'Bitcoin Bet Exchange',
       authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]
     }
   })
@@ -52,6 +73,7 @@ config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', funct
       }]
     },
     data: {
+      pageTitle: 'Make a deposit',
       authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]
     }
   })
@@ -68,6 +90,7 @@ config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', funct
       }]
     },
     data: {
+      pageTitle: 'Make a withdrawal',
       authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]
     }
   })
@@ -81,6 +104,7 @@ config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', funct
       }]
     },
     data: {
+      pageTitle: 'ibetbtc Affiliate Program',
       authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]
     }
   })
@@ -89,11 +113,43 @@ config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', funct
     controller: 'accountController',
     templateUrl: appConfig.site_url+'/partials/index/account',
     resolve: {
+      pageConfig: ['lang', function(lang) {
+          return  {lang: lang.pages.account};
+      }],
       user: ['api', function(api) {
         return api.getUser();
       }]
     },
     data: {
+      pageTitle: 'My Account',
+      authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]
+    }
+  })
+  .state('account.settings', {
+    url: "/settings",
+    controller: 'accountSettingsController',
+    templateUrl: appConfig.site_url+'/partials/index/account_settings',
+    resolve: {
+      user: ['api', function(api) {
+        return api.getUser();
+      }]
+    },
+    data: {
+      pageTitle: 'My Account',
+      authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]
+    }
+  })
+  .state('account.security', {
+    url: "/security",
+    controller: 'accountSettingsController',
+    templateUrl: appConfig.site_url+'/partials/index/account_security',
+    resolve: {
+      user: ['api', function(api) {
+        return api.getUser();
+      }]
+    },
+    data: {
+      pageTitle: 'My Account',
       authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]
     }
   })
@@ -102,6 +158,7 @@ config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', funct
     controller: 'loginController',
     templateUrl: appConfig.site_url+'/partials/index/login',
     data: {
+      pageTitle: 'Login',
       authorizedRoles: [USER_ROLES.all]
     }
   })
@@ -109,9 +166,108 @@ config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', funct
     url: "/proof/:game_id",
     templateUrl: function(params){ return appConfig.site_url+'/proof/game/' + params.game_id},
     data: {
+      pageTitle: 'Provably Fair',
       authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]
     }
   })
+  // games
+  .state('videopoker', {
+      url: "/videopoker",
+      controller: 'pokerController',
+      resolve: {
+        pageConfig: ['lang', function(lang) {
+          var obj = {
+            lang: lang.vp,
+            body_class:'vp'
+          };
+          return obj;
+        }],
+        gameData: ['vpApi',function(vpApi) {
+          return vpApi.getGame();
+        }],
+        user: ['api', function(api) {
+          return api.getUser();
+        }]
+      },
+      templateUrl: appConfig.site_url+'/partials/index/home_page_vp',
+      data: {
+        pageTitle: 'Bitcoin Video Poker',
+        bodyClass: 'vp',
+        authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]
+      }
+    })
+
+  .state('pokerdice', {
+    url: "/pokerdice",
+    controller: 'pokerDiceController',
+    templateUrl: appConfig.site_url+'/partials/index/home_page_pd',
+    resolve: {
+      pageConfig: ['lang', function(lang) {
+          var obj = {
+            lang: lang.pd,
+            body_class:'pd'
+          };
+          return obj;
+        }],
+      user: ['api', function(api) {
+        return api.getUser();
+      }]
+    },
+    data: {
+      pageTitle: 'Bitcoin Poker Dice',
+      bodyClass: 'pd',
+      authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]
+    }
+  })
+
+  .state('roulette', {
+    url: "/roulette",
+    controller: 'rouletteController',
+    templateUrl: appConfig.site_url+'/partials/index/home_page_rl',
+    resolve: {
+      body_class: function() {
+        return 'rl';
+      },
+      // game: ['pdapi',function(api) {
+      //   return pdApi.getGame();
+      // }],
+      user: ['api', function(api) {
+        return api.getUser();
+      }]
+    },
+    data: {
+      pageTitle: 'Bitcoin Roulette',
+      bodyClass: 'rl',
+      authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]
+    }
+  })
+
+  .state('blackjack', {
+    url: "/blackjack",
+    controller: 'blackjackController',
+    templateUrl: appConfig.site_url+'/partials/index/home_page_bj',
+    resolve: {
+      pageConfig: ['lang', function(lang) {
+          var obj = {
+            lang: lang.bj,
+            body_class:'bj'
+          };
+          return obj;
+        }],
+      game: ['api',function(api) {
+        return api.getGame();
+      }],
+      user: ['api', function(api) {
+        return api.getUser();
+      }]
+    },
+    data: {
+      pageTitle: 'Bitcoin Blackjack',
+      authorizedRoles: [USER_ROLES.user, USER_ROLES.admin]
+    }
+  })
+
+  // admin
   .state('admin', {
     url: "/admin",
     controller: 'adminController',
@@ -219,7 +375,7 @@ config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', funct
 .run(['$rootScope', '$state', '$location', 'AuthService', 'userDefault', 'AUTH_EVENTS', 'ngProgress', function($rootScope, $state, $location, AuthService, userDefault, AUTH_EVENTS, ngProgress){
 $rootScope.$on('$stateChangeStart', function (event, next) {
     
-    ngProgress.color('#52fb1e');
+    ngProgress.color('#fb1508');
     ngProgress.complete();
     ngProgress.start();  
 

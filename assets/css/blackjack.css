@@ -1,0 +1,24 @@
+.bj-body {
+  color: white; }
+  .bj-body h1 {
+    color: red; }
+  .bj-body .playingCards .card {
+    width: 120px;
+    height: 160px; }
+  .bj-body .playingCards ul.hand li:nth-child(1) {
+    left: -20px; }
+  .bj-body .block-ui-message {
+    padding: 3px; }
+  .bj-body .block-ui-overlay.block-ui-visible {
+    background-color: transparent; }
+  .bj-body .playingCards .card.back {
+    background-image: url(data:image/gif;base64,R0lGODlhJAAkAJH/AIctAJI0CL5QKAAAACwAAAAAJAAkAAACzpSCprFqyFw8sr2ZnqWV75Np3SRG5oaVKJp24Ac5nivK2E2v8uyRNdCYAH9BxZBIiRx9Q4ayJBQtT4Zm9cLxaTWhGi2Es4AXVEkiZjM7u6QxVtwCnb28U5eXjXKmyOdHYOW3EXg1WFTosZSYE0dX46MTaUZGqTJSSdZm2SP2KDmDRlfm+RjGKaqWJnrXuKOoJ/NqtFPohOjKVVtmBQg3u6fCamNbRwvF4uX2AnPGthMT6luaHIe2pko5ipehJ2jSfYubFO5A2EsrS34+XlUAADs=); }
+  .bj-body .playingCards .card .suit:after {
+    /*display: block;
+    margin-top: -.8em;
+    text-align: center;
+    white-space: pre;
+    line-height: .9;*/
+    margin-top: -.2em; }
+
+/*# sourceMappingURL=blackjack.css.map */

@@ -1,4 +1,5 @@
-<h1 class="title_text">Provably Fair</h1>
+<div class="container">
+<h1>Provably Fair</h1>
 			<div class="panel panel-default" ng-controller="proofController">
 				<div class="panel-heading">
 					<h3 class="panel-title">Proof of Fairness - Game ID: <?=$game->id;?></h3>
@@ -109,5 +110,6 @@ function seed_shuffle( $items, $seed ) {
 							<pre><?=$game->final_array;?></pre>
 						</tab>
 					</tabset>
+				</div>
 				</div>
 	

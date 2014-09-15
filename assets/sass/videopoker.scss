@@ -1,0 +1,78 @@
+$heading_color:white;
+$text_color:black;
+
+
+@font-face {
+	font-family: 'pcsenior';
+	src: url('/assets/fonts/pcsenior.woff');
+	font-weight: normal;
+	font-style: normal;
+
+}
+
+.vp-body {
+	color:$text_color;
+
+	h1,h2,h3,h4,h5,h6,p {
+		color:$heading_color;
+	}
+
+	.playingCards .card {
+		width:100%;
+		height:160px;
+		font-size: 15px;
+	}
+
+	.playingCards .card .corner-suit {
+		font-size: 30px;
+	}
+
+	.block-ui-message {
+		padding:3px;
+	}
+
+	.block-ui-overlay.block-ui-visible {
+		background-color: transparent;
+	}
+
+	.playingCards .card.back {
+		background-image: url(data:image/gif;base64,R0lGODlhJAAkAJH/AIctAJI0CL5QKAAAACwAAAAAJAAkAAACzpSCprFqyFw8sr2ZnqWV75Np3SRG5oaVKJp24Ac5nivK2E2v8uyRNdCYAH9BxZBIiRx9Q4ayJBQtT4Zm9cLxaTWhGi2Es4AXVEkiZjM7u6QxVtwCnb28U5eXjXKmyOdHYOW3EXg1WFTosZSYE0dX46MTaUZGqTJSSdZm2SP2KDmDRlfm+RjGKaqWJnrXuKOoJ/NqtFPohOjKVVtmBQg3u6fCamNbRwvF4uX2AnPGthMT6luaHIe2pko5ipehJ2jSfYubFO5A2EsrS34+XlUAADs=);
+
+	}
+
+	.playingCards .card .suit:after {
+    /*display: block;
+    margin-top: -.8em;
+    text-align: center;
+    white-space: pre;
+    line-height: .9;*/
+    font-size: 2.75em;
+    margin-top:-.2em;
+  }
+
+  .playingCards .card .rank {
+  	font-size: 28px;
+  }
+
+  .nav-tabs {
+  border-bottom-color: white;
+}
+
+.white-text {
+  color:white;
+}
+
+.nav-tabs>li>a {
+  background-color:#ddd;
+  font-size: 12px;
+}
+
+.vp-payouts-table {
+  background-color: white;
+  font-size:12px;
+}
+
+.wager-buttons {
+	padding-left:3px;
+}
+}

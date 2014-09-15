@@ -1,30 +1,44 @@
-<div class="account-settings" ng-controller="accountSettingsController">
-	<h4 class="black-text" ng-show="!user.has_password">Password Protection</h4>
-	<h4 class="black-text" ng-show="user.has_password">Change Password</h4>
-	<p class="black-text" ng-show="!user.has_password">A password is not required for your account, but it will protect your account in the event that you someone learns your unique site URL.</p>
-	<div class="row">
-		<div class="col-md-4">
-			<form role="form" ng-submit="setPassword(pass)">
-				<div ng-show="user.has_password" class="form-group">
-				<label for="password">Current Password</label>
-					<input type="password" class="form-control" id="password" ng-model="pass.current_password" placeholder="Current Password" required>
-				</div>
-				<div class="form-group">
-				<label for="password">Password</label>
-					<input type="password" class="form-control" id="password" ng-model="pass.password" placeholder="New Password" required>
-				</div>
-				<div class="form-group">
-					<label for="password_confirm">Confirm Password</label>
-					<input type="password" class="form-control" id="password_confirm" ng-model="pass.password_confirm" placeholder="Confirm Password" required>
-				</div>
-				<button type="submit" class="btn btn-info pull-right" >Submit</button>
-			</form>
-		</div>
-		<div class="col-md-8">
-			<div ng-show="password_errors != null" class="alert alert-danger">
-				{{password_errors}}
-			</div>
-		</div>
-	</div>
-	
+<form class="form-horizontal" ng-submit="updateUserSettings(settings)">
+<fieldset>
+
+<!-- Form Name -->
+<legend>{{lang.pages.account.account_settings}}</legend>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="textinput">{{lang.username}}</label>  
+  <div class="col-md-4">
+  <input ng-model="settings.username" class="form-control input-md">
+  <span class="help-block">{{lang.username_help}}</span>  
+  </div>
 </div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="textinput">{{lang.email_address}}</label>  
+  <div class="col-md-4">
+  <input ng-model="settings.email" class="form-control input-md">
+  <span class="help-block">{{lang.email_address_help}}</span>  
+  </div>
+</div>
+
+<!-- Select Basic -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="selectbasic">{{lane.timezone}}</label>
+  <div class="col-md-4">
+    <select ng-model="settings.timezone" ng-options="tz.zone for tz in timezones" class="form-control">
+    	<option value="">{{lang.choose_timezone}}</option>
+    </select>
+  </div>
+</div>
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="singlebutton">{{lang.save}}</label>
+  <div class="col-md-4">
+    <button id="singlebutton" name="singlebutton" class="btn btn-primary">{{lang.save}}</button>
+  </div>
+</div>
+
+</fieldset>
+</form>

@@ -16,17 +16,20 @@ class user_model extends CI_model
 		$this->load->library('bitcoinservice');
 		$address = $this->bitcoinservice->get_address($guid);
 
-		if($this->input->get('aff')) {
-			$this->load->library('guid');
-			$this->load->config('dice_config');
-			$config = $this->config->item('dice_config');
-			$affiliate__user_id = $this->guid->create_alphaId($this->input->get('aff'),true,false,$config['guid_secret']);
+		$this->load->library('guid');
+		$this->load->config('game_config');
+		$config = $this->config->item('game_config');
+
+		if($this->input->get('aff')) {			
+			$affiliate_user_id = $this->guid->create_alphaId($this->input->get('aff'),true,false,$config['guid_secret']);
 		}
+
 
 		$this->load->database();
 		$insert_data = array(
 			'guid' => $guid,
 		 	'available_balance' => 200000000,
+		 	//'username' => $username,
 		 	'affiliate_earnings' => 0,
 		 	'role' => 'user',
 		 	'address' => json_decode($address)->address,
@@ -35,10 +38,26 @@ class user_model extends CI_model
 		);
 
 		if(isset($affiliate__user_id)) {
-			$insert_data['affiliate_user_id'] = $affiliate__user_id;
+			$insert_data['affiliate_user_id'] = $affiliate_user_id;
 		}
 
 		$this->db->insert('users', $insert_data);
+
+		$insert_id = $this->db->insert_id();
+
+		$update_data['username'] = $this->guid->create_alphaId($insert_id,false,false,$config['guid_secret']);
+		$this->db->where('user_id', $insert_id);
+		$this->db->update('users', $update_data);
+
+
+	}
+
+	function update_settings($user_id, $update_data) {
+
+		$update_data['updated_on'] = date('Y-m-d H:i:s');
+
+		$this->db->where('user_id', $user_id);
+		$this->db->update('users', $update_data);
 	}
 
 	function set_password($user_id, $password) {
@@ -78,7 +97,7 @@ class user_model extends CI_model
 		//die('getting user '.$guid);
 		$this->load->database();
 		if($public) {
-			$this->db->select('user_id,guid,available_balance,address,affiliate_earnings,has_password, role');
+			$this->db->select('user_id,username,email,timezone,guid,available_balance,address,affiliate_earnings,has_password, role');
 		}
 		
 		$user = $this->db->get_where('users', array('user_id'=> $user_id))->row();
@@ -88,7 +107,7 @@ class user_model extends CI_model
 		$config = $this->config->item('dice_config');
 		
 		if($user) {
-			$user->affiliate_id = $this->guid->create_alphaId($user->user_id,false,false,$config['guid_secret']);
+			$user->affiliate_id = $user->username;
 		}
 		
 		

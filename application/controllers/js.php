@@ -19,31 +19,33 @@ class Js extends CI_Controller {
 			$lang = $this->session->userdata('language');
 		}
 
-		$this->lang->load('main', $lang);
-		$data['language'] = json_encode($this->lang->language);
-
 		
-		$this->load->config('dice_config');
-		$config = $this->config->item('dice_config');
+		
+		$this->load->config('game_config');
+		$config = $this->config->item('game_config');
 		$config['site_url'] = site_url();
 		$config['guid'] = $user->guid;
 		unset($config['guid_secret']);
 		$data['config'] = json_encode($config);
-		
-		$this->load->model('game_model');
-		$game = $this->game_model->get_game($user->user_id);
-		if(!$game) {
-			$game = $this->game_model->create_game($user->user_id);
-		}
 
-		unset($game->server_seeds);
-		unset($game->initial_array);
-		unset($game->final_array);
+		$this->lang->load('main', $lang);
+		$data['language'] = json_encode($this->lang->language);
+
+		
+		// $this->load->model('game_model');
+		// $game = $this->game_model->get_game($user->user_id);
+		// if(!$game) {
+		// 	$game = $this->game_model->create_game($user->user_id);
+		// }
+
+		// unset($game->server_seeds);
+		// unset($game->initial_array);
+		// unset($game->final_array);
 		
 		$this->load->model('withdrawal_model');
 		$withdrawals = json_encode($this->withdrawal_model->get_all($user->user_id));
 
-		$data['games'] = json_encode($this->game_model->get_games($user->user_id));
+		//$data['games'] = json_encode($this->game_model->get_games($user->user_id));
 
 		$this->load->model('transaction_model');
 		$transactions = json_encode($this->transaction_model->get_transactions($user->user_id));
@@ -58,11 +60,23 @@ class Js extends CI_Controller {
 		}
 
 		$data['user'] = json_encode($user);
-		$data['game'] = json_encode($game);
+		$data['timezones'] = json_encode($this->tz_list());
+		//$data['game'] = json_encode($game);
 		$data['transactions'] = json_encode($transactions);
 		$data['withdrawals'] = json_encode($withdrawals);
 
 		
 		$this->load->view('js', $data);
+	}
+
+	function tz_list() {
+	  $zones_array = array();
+	  $timestamp = time();
+	  foreach(timezone_identifiers_list() as $key => $zone) {
+	    date_default_timezone_set($zone);
+	    $zones_array[$key]['zone'] = $zone.' '.'UTC/GMT ' . date('P', $timestamp);
+	    $zones_array[$key]['diff_from_GMT'] = 'UTC/GMT ' . date('P', $timestamp);
+	  }
+	  return $zones_array;
 	}
 }

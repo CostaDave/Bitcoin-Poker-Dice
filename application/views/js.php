@@ -14,6 +14,5 @@ angular.module('bitcoinDice').constant('USER_ROLES', {
 });
 angular.module('bitcoinDice').constant('lang', <?=$language;?>);
 angular.module('bitcoinDice').constant('userDefault', <?=$user;?>);
-angular.module('bitcoinDice').constant('games', <?=$games;?>);
 
-angular.module('bitcoinDice').constant('transactions', <?=$transactions;?>);
+angular.module('bitcoinDice').constant('timezones', <?=$timezones;?>);

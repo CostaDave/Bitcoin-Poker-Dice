@@ -1,5 +1,5 @@
-
-		<h1 class="title_text">Withdraw</h1>
+<div class="container">
+		<h1>Withdraw</h1>
 		<div class="row">
 			<div class="col-md-12">
 				<div class="panel panel-default">
@@ -38,3 +38,4 @@
 				</div>
 			</div>
 		</div>
+</div>

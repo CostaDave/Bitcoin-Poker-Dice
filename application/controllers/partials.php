@@ -17,6 +17,10 @@ class Partials extends CI_Controller {
 		// if($this->session->userdata('has_password') && !$this->ion_auth->logged_in()) {
 		// 	$this->load->view('login');
 		// } else {
+			// $this->load->config('game_config');
+			// if($page == 'home_page') {
+			// 	$page = $page.'_'.$this->config->item('game_config')['game_type'];
+			// }
 			$this->load->view('partials/'.$page);
 		// }
 	}
