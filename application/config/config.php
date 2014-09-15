@@ -17,7 +17,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://ibetbtc_fund/';
+$config['base_url']	= 'https://ibetbtc.com/';
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ $config['base_url']	= 'http://ibetbtc_fund/';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------
