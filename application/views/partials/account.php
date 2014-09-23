@@ -26,7 +26,7 @@
 </div>
 </div>
 
-<div class="panel panel-default" ng-controller="tabController">
+<!-- <div class="panel panel-default" ng-controller="tabController">
 	<div class="panel-body">
 		<tabset>
 			<tab heading="Settings">
@@ -97,4 +97,4 @@
 			
 		</tabset>
 	</div>
-</div>
+</div> -->
