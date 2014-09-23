@@ -5,7 +5,7 @@
 <div class="modal-body">
 	<p>{{lang.pages.home.welcome_desc}}</p>
 	<p>{{lang.pages.home.welcome_url}}</p>
-	<div class="text-center"><code>{{config.site_url}}/{{user.guid}}</code></div>
+	<div class="text-center"><code>{{config.site_url}}/u/{{user.guid}}</code></div>
 	<div class="spacer10"></div>
 	<update-password-directive current="user.has_password"></update-password-directive>
 </div>
