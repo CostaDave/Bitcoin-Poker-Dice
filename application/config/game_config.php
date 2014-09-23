@@ -10,9 +10,9 @@ $config['game_config']['wager_amounts'] = array(.001,.01,.1);
 $config['roll_dice_time'] = 3000; //miliseconds
 $config['game_config']['games_available'] = array(
 	array('name'=>'vp', 'state'=>'videopoker', 'text'=>'Video Poker'),
-	array('name'=>'bj', 'state'=>'blackjack', 'text'=>'Blackjack'),
+	//array('name'=>'bj', 'state'=>'blackjack', 'text'=>'Blackjack'),
 	array('name'=>'pd', 'state'=>'pokerdice', 'text'=>'Poker Dice'),
-	array('name'=>'rl', 'state'=>'roulette', 'text'=>'Roulette')
+	//array('name'=>'rl', 'state'=>'roulette', 'text'=>'Roulette')
 );
 $config['game_config']['vp']['max_bet'] = 100000000;
 $config['game_config']['vp']['wager_amounts'] = array(.001,.01,.1);
