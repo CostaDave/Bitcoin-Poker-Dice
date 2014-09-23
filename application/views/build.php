@@ -39,7 +39,7 @@
               <span class="icon-bar"></span>
             </button>
             <!-- <a href="#/" class="navbar-brand visible-sm visible-xs">{{config.site_name}}</a> -->
-            <a href="#/" class="navbar-brand"><img src="/assets/img/black_logo.png" height="20"/></a>
+            <a href="#/" class="navbar-brand"><img src="/dist/img/black_logo.png" height="20"/></a>
           </div>
           <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
