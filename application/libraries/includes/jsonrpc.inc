@@ -920,17 +920,17 @@
 		var $id = null; // used to store request ID internally
 		var $content_type = 'application/json';
 
-		/**
-		* @param string $meth the name of the method to invoke
-		* @param array $pars array of parameters to be paased to the method (xmlrpcval objects)
-		* @param mixed $id the id of the jsonrpc request
-		*/
-		function jsonrpcmsg($meth, $pars=0, $id=null)
-		{
-			// NB: a NULL id is allowed and has a very definite meaning!
-			$this->id = $id;
-			$this->xmlrpcmsg($meth, $pars);
-		}
+	/**
+	* @param string $meth the name of the method to invoke
+	* @param array $pars array of parameters to be paased to the method (xmlrpcval objects)
+	* @param mixed $id the id of the jsonrpc request
+	*/
+	function __construct($meth, $pars=0, $id=null)
+	{
+		// NB: a NULL id is allowed and has a very definite meaning!
+		$this->id = $id;
+		parent::__construct($meth, $pars);
+	}
 
 		/**
 		* @access private

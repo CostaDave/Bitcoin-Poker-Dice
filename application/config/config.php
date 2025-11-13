@@ -17,7 +17,25 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://ibetbtc_fund/';
+$base_url = getenv('APP_BASE_URL');
+
+if (!$base_url) {
+	$scheme = 'http';
+	if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === 1)) {
+		$scheme = 'https';
+	}
+
+	$host = $_SERVER['HTTP_HOST'] ?? 'localhost:8080';
+	$script_name = $_SERVER['SCRIPT_NAME'] ?? '';
+	$base_path = rtrim(str_replace(basename($script_name), '', $script_name), '/');
+	$base_url = $scheme . '://' . $host;
+
+	if ($base_path !== '') {
+		$base_url .= $base_path;
+	}
+}
+
+$config['base_url']	= rtrim($base_url, '/') . '/';
 
 /*
 |--------------------------------------------------------------------------

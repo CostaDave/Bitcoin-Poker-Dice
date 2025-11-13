@@ -375,9 +375,9 @@ config(['$stateProvider', '$urlRouterProvider', 'appConfig', 'USER_ROLES', 'bloc
 .run(['$rootScope', '$state', '$location', 'AuthService', 'userDefault', 'AUTH_EVENTS', 'ngProgress', function($rootScope, $state, $location, AuthService, userDefault, AUTH_EVENTS, ngProgress){
 $rootScope.$on('$stateChangeStart', function (event, next) {
     
-    ngProgress.color('#fb1508');
-    ngProgress.complete();
-    ngProgress.start();  
+    if (ngProgress.setColor) ngProgress.setColor('#fb1508');
+    if (ngProgress.complete) ngProgress.complete();
+    if (ngProgress.start) ngProgress.start();  
 
     var user;
 
@@ -407,6 +407,6 @@ $rootScope.$on('$stateChangeStart', function (event, next) {
   });
 $rootScope.$on('$stateChangeSuccess', function (event, next) {
     
-    ngProgress.complete();     
+    if (ngProgress && ngProgress.complete) ngProgress.complete();     
   });
 }]);

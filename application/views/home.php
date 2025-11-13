@@ -15,13 +15,12 @@
   <title update-title>ibetbtc</title>
 
   <!-- build:css app.min.css -->
-  <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/bower_components/font-awesome/css/font-awesome.css" rel="stylesheet">
-  <link href="/bower_components/ng-table/ng-table.css" rel="stylesheet">
-  <link href="/bower_components/ngprogress/ngProgress.css" rel="stylesheet">
-  <link href="/bower_components/CSS-Playing-Cards/cards.css" rel="stylesheet">
-  <link href="/bower_components/angular-block-ui/dist/angular-block-ui.min.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="/bower_components/Plugins/integration/bootstrap/3/dataTables.bootstrap.css" media="screen" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/ng-table@0.8.3/dist/ng-table.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/ngprogress@1.1.3/ngProgress.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap.min.css">
+  <link href="/assets/css/cards.css" rel="stylesheet">
   <link href="/assets/css/style.css" rel="stylesheet">
   <link href="/assets/css/home-page.css" rel="stylesheet">
   <link href="/assets/css/blackjack.css" rel="stylesheet">
@@ -53,8 +52,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <!-- <a href="#/" class="navbar-brand visible-sm visible-xs">{{config.site_name}}</a> -->
-            <a href="#/" class="navbar-brand"><img src="/dist/img/black_logo.png" height="20"/></a>
+            <a href="#/" class="navbar-brand">{{config.site_name}}</a>
           </div>
           <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
@@ -146,28 +144,28 @@
 
 
   <!-- build:js app.min.js -->
-  <script src="/bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
-  <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="/bower_components/angular/angular.min.js"></script>
-  <!-- <script src="/bower_components/angular-route/angular-route.js"></script>-->
-  <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-  <script src="/bower_components/lodash/dist/lodash.min.js"></script>
-  <script src="/bower_components/restangular/dist/restangular.min.js"></script>
-  <script src="/bower_components/jquery.qrcode/dist/jquery.qrcode.min.js"></script>
-  <script src="/bower_components/soundmanager2/script/soundmanager2-nodebug-jsmin.js"></script>
-  <script src="/bower_components/datatables/media/js/jquery.dataTables.js"></script>
-  <script src="/bower_components/angular-datatables/dist/angular-datatables.min.js"></script>
-  <script src="/bower_components/ng-table/ng-table.js"></script>
-  <script src="/bower_components/ngprogress/build/ngProgress.js"></script>
-  <script src="/bower_components/async/lib/async.js"></script>
-  <script src="/bower_components/angular-block-ui/dist/angular-block-ui.min.js"></script>
-  <script src="/bower_components/jquery-backstretch/jquery.backstretch.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.32/angular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.11.0/ui-bootstrap-tpls.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.2/lodash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/restangular/1.4.0/restangular.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/soundmanager2/2.97a.20170601/script/soundmanager2-nodebug-jsmin.js"></script>
+  <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/plug-ins/1.10.25/integration/bootstrap/3/dataTables.bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/l-lin/angular-datatables@0.4.3/dist/angular-datatables.min.js"></script>
+  <script src="https://unpkg.com/ng-table@0.8.3/dist/ng-table.min.js"></script>
+  <script src="https://unpkg.com/ngprogress@1.1.3/build/ngprogress.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/async/0.9.2/async.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.1.18/jquery.backstretch.min.js"></script>
   <script src="/assets/js/libs/jquery.jrumble.1.3.min.js"></script>
 
-
-  <script src="/assets/js/app/app.js"></script>
+  <!-- App scripts -->
+  <script src="/assets/js/app/services/blockUIMock.js?v=2"></script>
+  <script src="/assets/js/app/app.js?v=2"></script>
   <script src="/assets/js/app/controllers.js"></script>
   <script src="/assets/js/app/controllers/applicationController.js"></script>
   <script src="/assets/js/app/controllers/navController.js"></script>

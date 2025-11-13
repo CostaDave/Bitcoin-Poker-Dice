@@ -48,14 +48,15 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'root';
-$db['default']['password'] = 'dominique';
-$db['default']['database'] = 'bitzee';
-$db['default']['dbdriver'] = 'mysql';
+$db['default']['hostname'] = getenv('DB_HOST') ? getenv('DB_HOST') : '127.0.0.1';
+$db['default']['port'] = getenv('DB_PORT') ? getenv('DB_PORT') : '3306';
+$db['default']['username'] = getenv('DB_USERNAME') ? getenv('DB_USERNAME') : 'bitcoin';
+$db['default']['password'] = getenv('DB_PASSWORD') ? getenv('DB_PASSWORD') : 'bitcoinpassword';
+$db['default']['database'] = getenv('DB_DATABASE') ? getenv('DB_DATABASE') : 'bitzee';
+$db['default']['dbdriver'] = getenv('DB_DRIVER') ? getenv('DB_DRIVER') : 'mysqli';
 $db['default']['dbprefix'] = '';
-$db['default']['pconnect'] = TRUE;
-$db['default']['db_debug'] = TRUE;
+$db['default']['pconnect'] = FALSE;
+$db['default']['db_debug'] = (ENVIRONMENT !== 'production');
 $db['default']['cache_on'] = FALSE;
 $db['default']['cachedir'] = '';
 $db['default']['char_set'] = 'utf8';

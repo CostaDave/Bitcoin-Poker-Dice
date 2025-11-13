@@ -1,0 +1,47 @@
+/* Simple playing card styles - placeholder for CSS-Playing-Cards */
+.card {
+  display: inline-block;
+  width: 3.3em;
+  height: 4.6em;
+  border: 1px solid #666;
+  border-radius: 0.3em;
+  background: white;
+  position: relative;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.4);
+  font-family: sans-serif;
+  font-size: 12px;
+}
+
+.card.back {
+  background: repeating-linear-gradient(
+    45deg,
+    #606dbc,
+    #606dbc 10px,
+    #465298 10px,
+    #465298 20px
+  );
+}
+
+.card .rank,
+.card .suit {
+  position: absolute;
+  font-weight: bold;
+}
+
+.card .rank {
+  top: 0.2em;
+  left: 0.2em;
+}
+
+.card.hearts .rank,
+.card.diamonds .rank {
+  color: #c00;
+}
+
+.card.spades .rank,
+.card.clubs .rank {
+  color: #000;
+}
+
+
+

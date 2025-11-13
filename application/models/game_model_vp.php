@@ -779,7 +779,8 @@ function draw($game, $held, $seed, $stake = 0, $paytable) {
 	//shuffle the deck, but only if it's the first roll
 	if($deal_num == 1) {
 		$deck = json_decode($game->initial_array, true);
-		$shuffled_deck = $this->seed_shuffle($deck, $seed[1]);
+		$seed_val = is_array($seed) ? $seed[1] : $seed;
+		$shuffled_deck = $this->seed_shuffle($deck, $seed_val);
 	}
 
 	for($i=1;$i<=5;$i++) {

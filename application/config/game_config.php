@@ -4,7 +4,8 @@ $config['game_config']['site_name'] = 'Bitcoin Video Poker';
 $config['game_config']['game_type'] = 'vp';
 $config['game_config']['guid_secret'] = 'F*KfC!8PuPi*KGiXIa';
 $config['game_config']['affiliate_percent'] = .075;
-$config['game_config']['demo_mode'] = false;
+$demo_mode_env = getenv('GAME_DEMO_MODE');
+$config['game_config']['demo_mode'] = ($demo_mode_env !== false) ? filter_var($demo_mode_env, FILTER_VALIDATE_BOOLEAN) : false;
 $config['game_config']['max_bet'] = 100000000;
 $config['game_config']['wager_amounts'] = array(.001,.01,.1);
 $config['roll_dice_time'] = 3000; //miliseconds

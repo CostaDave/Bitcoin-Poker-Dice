@@ -39,7 +39,7 @@ class Main extends CI_Controller {
 
 		$data['templates'] = array('games_table','card','welcome_modal', 'update_email', 'update_password');
 
-		$this->session->set_userdata('guid', $this->input->get('user'));
+		$this->session->set_userdata('guid', $guid);
 		$this->session->set_userdata('user_id', $user->user_id);
 
 		if(ENVIRONMENT == 'production') {

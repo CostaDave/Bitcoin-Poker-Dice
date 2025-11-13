@@ -24,6 +24,9 @@ class user_model extends CI_model
 			$affiliate_user_id = $this->guid->create_alphaId($this->input->get('aff'),true,false,$config['guid_secret']);
 		}
 
+		// Parse the address response safely
+		$address_obj = json_decode($address);
+		$bitcoin_address = (is_object($address_obj) && isset($address_obj->address)) ? $address_obj->address : null;
 
 		$this->load->database();
 		$insert_data = array(
@@ -32,7 +35,7 @@ class user_model extends CI_model
 		 	//'username' => $username,
 		 	'affiliate_earnings' => 0,
 		 	'role' => 'user',
-		 	'address' => json_decode($address)->address,
+		 	'address' => $bitcoin_address,
 		 	'created_on' => date('Y-m-d H:i:s'),
 			'updated_on' => date('Y-m-d H:i:s')
 		);

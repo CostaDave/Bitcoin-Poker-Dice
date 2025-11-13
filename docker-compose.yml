@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:5.7
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-bitzee}
+      MYSQL_USER: ${DB_USERNAME:-bitcoin}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-bitcoinpassword}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+
+  web:
+    build:
+      context: .
+    depends_on:
+      - db
+    ports:
+      - "8080:80"
+    environment:
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:8080}
+      DB_HOST: db
+      DB_PORT: ${DB_PORT:-3306}
+      DB_DATABASE: ${DB_DATABASE:-bitzee}
+      DB_USERNAME: ${DB_USERNAME:-bitcoin}
+      DB_PASSWORD: ${DB_PASSWORD:-bitcoinpassword}
+      BTC_CLIENT_TYPE: ${BTC_CLIENT_TYPE:-mock}
+      BTC_RPC_SCHEME: ${BTC_RPC_SCHEME:-http}
+      BTC_RPC_HOST: ${BTC_RPC_HOST:-localhost}
+      BTC_RPC_PORT: ${BTC_RPC_PORT:-8332}
+      BTC_RPC_USER: ${BTC_RPC_USER:-demo}
+      BTC_RPC_PASS: ${BTC_RPC_PASS:-demo}
+      BTC_BLOCKCHAIN_IDENTIFIER: ${BTC_BLOCKCHAIN_IDENTIFIER:-demo-identifier}
+      BTC_BLOCKCHAIN_PASSWORD: ${BTC_BLOCKCHAIN_PASSWORD:-demo-password}
+      GAME_DEMO_MODE: ${GAME_DEMO_MODE:-true}
+    volumes:
+      - .:/var/www/html
+
+volumes:
+  db_data:
+

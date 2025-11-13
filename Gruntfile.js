@@ -41,7 +41,7 @@ module.exports = function(grunt) {
     },
     'useminPrepare': {
       options: {
-        root: '/home/wsadmin/bitzee/',
+        root: '.',
         dest: 'dist'
       },
       html: 'application/views/home.php'
@@ -49,7 +49,7 @@ module.exports = function(grunt) {
 
     usemin: {
       options: {
-        assetDirs: '/dist/'
+        assetsDirs: ['dist']
       },
       html: ['application/views/build.php']
     },

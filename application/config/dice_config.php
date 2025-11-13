@@ -3,7 +3,8 @@
 $config['dice_config']['site_name'] = 'Bitcoin Poker Dice';
 $config['dice_config']['guid_secret'] = 'F*KfC!8PuPi*KGiXIa';
 $config['dice_config']['affiliate_percent'] = .075;
-$config['dice_config']['demo_mode'] = false;
+$demo_mode_env = getenv('GAME_DEMO_MODE');
+$config['dice_config']['demo_mode'] = ($demo_mode_env !== false) ? filter_var($demo_mode_env, FILTER_VALIDATE_BOOLEAN) : false;
 $config['dice_config']['max_bet'] = 100000000;
 $config['dice_config']['wager_amounts'] = array(.001,.01,.1);
 $config['roll_dice_time'] = 3000; //miliseconds
